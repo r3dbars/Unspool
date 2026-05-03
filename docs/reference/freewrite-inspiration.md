@@ -1,6 +1,6 @@
 # Freewrite Inspiration
 
-Daily Pages borrowed product inspiration from `farzaa/freewrite`, an MIT-licensed
+Mental Compost borrowed product inspiration from `farzaa/freewrite`, an MIT-licensed
 native macOS freewriting app:
 
 - quiet full-window writing mode
@@ -10,5 +10,5 @@ native macOS freewriting app:
 - light/dark writing modes
 - optional no-delete freewrite constraint
 
-Daily Pages keeps a different privacy model: no web chat links, no network calls,
-and no automatic AI export.
+Mental Compost keeps a different privacy model: no web chat links, no external AI
+calls, optional localhost AI only, and no automatic AI export.
