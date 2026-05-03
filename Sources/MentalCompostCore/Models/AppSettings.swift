@@ -13,8 +13,8 @@ public struct AppSettings: Equatable, Sendable {
         compostDirectory: URL = CompostReviewStore.defaultCompostDirectory(),
         contextExportDirectory: URL? = nil,
         localAIEnabled: Bool = false,
-        localAIEndpointURL: URL = URL(string: "http://localhost:8080/v1/chat/completions")!,
-        localAIModelName: String = "local-model"
+        localAIEndpointURL: URL = URL(string: LocalModelDefaults.endpointURLString)!,
+        localAIModelName: String = LocalModelDefaults.modelName
     ) {
         self.entriesDirectory = entriesDirectory
         self.compostDirectory = compostDirectory

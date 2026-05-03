@@ -19,6 +19,12 @@ public enum MarkdownEntrySerializer {
         if let exportedAt = entry.exportedAt {
             lines.append("exportedAt: \(isoString(exportedAt))")
         }
+        if let insightSummary = entry.insightSummary {
+            lines.append("insightsReviewedAt: \(isoString(insightSummary.reviewedAt))")
+            appendMetadataLine("insightBottleneck", value: insightSummary.bottleneck, to: &lines)
+            appendMetadataLine("insightNextRedBar", value: insightSummary.nextRedBar, to: &lines)
+            appendMetadataLine("insightGreenBarSignal", value: insightSummary.greenBarSignal, to: &lines)
+        }
         if let moodBefore = entry.moodBefore, !moodBefore.isEmpty {
             lines.append("moodBefore: \(escapedMetadataValue(moodBefore))")
         }
@@ -54,6 +60,14 @@ public enum MarkdownEntrySerializer {
         let updatedAt = metadata["updatedAt"].flatMap(dateFromISO) ?? createdAt
         let compostedAt = metadata["compostedAt"].flatMap(dateFromISO)
         let exportedAt = metadata["exportedAt"].flatMap(dateFromISO)
+        let insightSummary = metadata["insightsReviewedAt"].flatMap(dateFromISO).map {
+            EntryInsightSummary(
+                reviewedAt: $0,
+                bottleneck: metadata["insightBottleneck"] ?? "",
+                nextRedBar: metadata["insightNextRedBar"] ?? "",
+                greenBarSignal: metadata["insightGreenBarSignal"] ?? ""
+            )
+        }
         let body = parseBody(String(markdown[frontmatterEnd.upperBound...]))
 
         return DailyEntry(
@@ -64,7 +78,8 @@ public enum MarkdownEntrySerializer {
             compostedAt: compostedAt,
             exportedAt: exportedAt,
             moodBefore: metadata["moodBefore"],
-            moodAfter: metadata["moodAfter"]
+            moodAfter: metadata["moodAfter"],
+            insightSummary: insightSummary
         )
     }
 
@@ -114,11 +129,22 @@ public enum MarkdownEntrySerializer {
     }
 
     private static func escapedMetadataValue(_ value: String) -> String {
-        value.replacingOccurrences(of: "\n", with: "\\n")
+        value
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\"", with: "\\\"")
     }
 
     private static func unescapedMetadataValue(_ value: String) -> String {
-        value.replacingOccurrences(of: "\\n", with: "\n")
+        value
+            .replacingOccurrences(of: "\\\"", with: "\"")
+            .replacingOccurrences(of: "\\n", with: "\n")
+            .trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+    }
+
+    private static func appendMetadataLine(_ key: String, value: String, to lines: inout [String]) {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        lines.append("\(key): \"\(escapedMetadataValue(trimmed))\"")
     }
 }
 

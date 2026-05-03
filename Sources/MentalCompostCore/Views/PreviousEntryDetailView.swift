@@ -48,9 +48,16 @@ public struct PreviousEntryDetailView: View {
         }
         .frame(minWidth: 640, minHeight: 520)
         .sheet(isPresented: $showingCompost) {
-            CompostReviewView(entry: entry, compostStore: compostStore) { review in
-                entryStore.markComposted(for: review.entryDate, at: review.generatedAt)
-            }
+            CompostReviewView(
+                entry: entry,
+                compostStore: compostStore,
+                onSave: { review in
+                    entryStore.markComposted(for: review.entryDate, at: review.generatedAt)
+                },
+                onApplyToEntry: { review in
+                    entryStore.applyInsights(from: review)
+                }
+            )
         }
     }
 }

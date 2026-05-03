@@ -12,6 +12,7 @@ public struct DailyEntry: Identifiable, Equatable, Sendable {
     public var exportedAt: Date?
     public var moodBefore: String?
     public var moodAfter: String?
+    public var insightSummary: EntryInsightSummary?
 
     public init(
         id: String? = nil,
@@ -24,7 +25,8 @@ public struct DailyEntry: Identifiable, Equatable, Sendable {
         compostedAt: Date? = nil,
         exportedAt: Date? = nil,
         moodBefore: String? = nil,
-        moodAfter: String? = nil
+        moodAfter: String? = nil,
+        insightSummary: EntryInsightSummary? = nil
     ) {
         let normalizedDate = DateSupport.startOfDay(for: date)
         let computedWordCount = wordCount ?? WordCounter.count(body)
@@ -39,6 +41,7 @@ public struct DailyEntry: Identifiable, Equatable, Sendable {
         self.exportedAt = exportedAt
         self.moodBefore = moodBefore
         self.moodAfter = moodAfter
+        self.insightSummary = insightSummary
     }
 
     public var dayString: String {
@@ -55,7 +58,8 @@ public struct DailyEntry: Identifiable, Equatable, Sendable {
             compostedAt: compostedAt,
             exportedAt: exportedAt,
             moodBefore: moodBefore,
-            moodAfter: moodAfter
+            moodAfter: moodAfter,
+            insightSummary: insightSummary
         )
     }
 
@@ -71,7 +75,8 @@ public struct DailyEntry: Identifiable, Equatable, Sendable {
             compostedAt: compostedAt,
             exportedAt: date,
             moodBefore: moodBefore,
-            moodAfter: moodAfter
+            moodAfter: moodAfter,
+            insightSummary: insightSummary
         )
     }
 
@@ -87,7 +92,25 @@ public struct DailyEntry: Identifiable, Equatable, Sendable {
             compostedAt: date,
             exportedAt: exportedAt,
             moodBefore: moodBefore,
-            moodAfter: moodAfter
+            moodAfter: moodAfter,
+            insightSummary: insightSummary
+        )
+    }
+
+    public func withInsightSummary(_ summary: EntryInsightSummary) -> DailyEntry {
+        DailyEntry(
+            id: id,
+            date: self.date,
+            body: body,
+            wordCount: wordCount,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            reachedGoal: reachedGoal,
+            compostedAt: compostedAt,
+            exportedAt: exportedAt,
+            moodBefore: moodBefore,
+            moodAfter: moodAfter,
+            insightSummary: summary
         )
     }
 }

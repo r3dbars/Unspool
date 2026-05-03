@@ -5,6 +5,7 @@ public struct CompostReviewView: View {
     public var entry: DailyEntry
     @ObservedObject public var compostStore: CompostReviewStore
     public var onSave: (CompostReview) -> Void
+    public var onApplyToEntry: (CompostReview) -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var draftMarkdown = CompostReview.manualTemplateMarkdown
@@ -16,13 +17,19 @@ public struct CompostReviewView: View {
 
     @AppStorage("customExportDirectoryPath") private var customExportDirectoryPath = ""
     @AppStorage("localAIEnabled") private var localAIEnabled = false
-    @AppStorage("localAIEndpointURL") private var localAIEndpointURL = "http://localhost:8080/v1/chat/completions"
-    @AppStorage("localAIModelName") private var localAIModelName = "local-model"
+    @AppStorage("localAIEndpointURL") private var localAIEndpointURL = LocalModelDefaults.endpointURLString
+    @AppStorage("localAIModelName") private var localAIModelName = LocalModelDefaults.modelName
 
-    public init(entry: DailyEntry, compostStore: CompostReviewStore, onSave: @escaping (CompostReview) -> Void) {
+    public init(
+        entry: DailyEntry,
+        compostStore: CompostReviewStore,
+        onSave: @escaping (CompostReview) -> Void,
+        onApplyToEntry: @escaping (CompostReview) -> Void = { _ in }
+    ) {
         self.entry = entry
         self.compostStore = compostStore
         self.onSave = onSave
+        self.onApplyToEntry = onApplyToEntry
     }
 
     public var body: some View {
@@ -128,6 +135,11 @@ public struct CompostReviewView: View {
                 saveCurrentReview()
             }
 
+            Button("Apply to Page") {
+                applyToEntry()
+            }
+            .help("Write bottleneck, next red bar, and green-bar signal into this page’s Markdown frontmatter")
+
             Button("Export Selected Review") {
                 saveCurrentReview()
                 showingExportEditor = true
@@ -202,6 +214,15 @@ public struct CompostReviewView: View {
         compostStore.save(review)
         onSave(review)
         statusMessage = "Red Bars Review saved locally."
+    }
+
+    private func applyToEntry() {
+        let review = currentReview().withEditedMarkdown(draftMarkdown)
+        activeReview = review
+        compostStore.save(review)
+        onSave(review)
+        onApplyToEntry(review)
+        statusMessage = "Insights added to this page’s Markdown frontmatter."
     }
 
     private func currentReview() -> CompostReview {

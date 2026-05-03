@@ -28,7 +28,13 @@ public struct OpenAICompatibleLocalAIClient: LocalAIClient {
         request.timeoutInterval = timeout
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(
-            ChatCompletionRequest(model: model, messages: messages, temperature: temperature)
+            ChatCompletionRequest(
+                model: model,
+                messages: messages,
+                temperature: temperature,
+                stream: false,
+                reasoningEffort: "none"
+            )
         )
 
         do {
@@ -53,6 +59,16 @@ public struct OpenAICompatibleLocalAIClient: LocalAIClient {
         var model: String
         var messages: [LocalAIMessage]
         var temperature: Double
+        var stream: Bool
+        var reasoningEffort: String
+
+        enum CodingKeys: String, CodingKey {
+            case model
+            case messages
+            case temperature
+            case stream
+            case reasoningEffort = "reasoning_effort"
+        }
     }
 
     private struct ChatCompletionResponse: Decodable {

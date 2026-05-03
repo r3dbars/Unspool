@@ -93,6 +93,22 @@ public final class EntryStore: ObservableObject {
         save(entry: entry.markedComposted(at: compostedAt))
     }
 
+    public func applyInsights(from review: CompostReview, reviewedAt: Date = Date()) {
+        let summary = RedBarsReviewExtractor.insightSummary(from: review, reviewedAt: reviewedAt)
+        let key = DateSupport.dayString(for: review.entryDate)
+        if todayEntry.dayString == key {
+            todayEntry = todayEntry
+                .markedComposted(at: review.generatedAt)
+                .withInsightSummary(summary)
+            upsert(todayEntry)
+            saveTodayNow()
+            return
+        }
+
+        guard let entry = entries.first(where: { $0.dayString == key }) else { return }
+        save(entry: entry.markedComposted(at: review.generatedAt).withInsightSummary(summary))
+    }
+
     public func save(entry: DailyEntry) {
         guard shouldPersist(entry) else { return }
 

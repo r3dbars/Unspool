@@ -52,9 +52,16 @@ public struct TodayWritingView: View {
         .frame(minWidth: 720, minHeight: 560)
         .background(BackspaceGuardView(isEnabled: backspaceDisabled).frame(width: 0, height: 0))
         .sheet(isPresented: $showingCompost) {
-            CompostReviewView(entry: entryStore.todayEntry, compostStore: compostStore) { review in
-                entryStore.markComposted(for: review.entryDate, at: review.generatedAt)
-            }
+            CompostReviewView(
+                entry: entryStore.todayEntry,
+                compostStore: compostStore,
+                onSave: { review in
+                    entryStore.markComposted(for: review.entryDate, at: review.generatedAt)
+                },
+                onApplyToEntry: { review in
+                    entryStore.applyInsights(from: review)
+                }
+            )
         }
         .onAppear {
             editorFocused = true

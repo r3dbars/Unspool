@@ -4,8 +4,8 @@ import SwiftUI
 public struct AppSettingsView: View {
     @AppStorage("customExportDirectoryPath") private var customExportDirectoryPath = ""
     @AppStorage("localAIEnabled") private var localAIEnabled = false
-    @AppStorage("localAIEndpointURL") private var localAIEndpointURL = "http://localhost:8080/v1/chat/completions"
-    @AppStorage("localAIModelName") private var localAIModelName = "local-model"
+    @AppStorage("localAIEndpointURL") private var localAIEndpointURL = LocalModelDefaults.endpointURLString
+    @AppStorage("localAIModelName") private var localAIModelName = LocalModelDefaults.modelName
     @State private var localAITestMessage: String?
 
     public init() {}
@@ -44,6 +44,10 @@ public struct AppSettingsView: View {
             Section("Local Model") {
                 Toggle("Use local model when reviewing", isOn: $localAIEnabled)
 
+                Text("Recommended: \(LocalModelDefaults.displayName)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
                 TextField("Endpoint URL", text: $localAIEndpointURL)
                     .textFieldStyle(.roundedBorder)
 
@@ -57,6 +61,11 @@ public struct AppSettingsView: View {
                 }
 
                 HStack {
+                    Button("Use Recommended MLX Model") {
+                        localAIEndpointURL = LocalModelDefaults.endpointURLString
+                        localAIModelName = LocalModelDefaults.modelName
+                    }
+
                     Button("Test Local Model") {
                         testLocalAI()
                     }

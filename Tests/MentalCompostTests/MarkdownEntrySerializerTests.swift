@@ -34,4 +34,27 @@ final class MarkdownEntrySerializerTests: XCTestCase {
         XCTAssertEqual(loaded.body, body)
         XCTAssertEqual(loaded.wordCount, WordCounter.count(body))
     }
+
+    func testEntrySerializesAndLoadsInsightFrontmatter() throws {
+        let reviewedAt = Date(timeIntervalSince1970: 300)
+        let entry = DailyEntry(
+            date: fixedDate("2026-05-02"),
+            body: "Some body",
+            insightSummary: EntryInsightSummary(
+                reviewedAt: reviewedAt,
+                bottleneck: "Unclear demo",
+                nextRedBar: "Show the rough version",
+                greenBarSignal: "One user asks for it again"
+            )
+        )
+
+        let markdown = MarkdownEntrySerializer.markdown(for: entry)
+        let loaded = try MarkdownEntrySerializer.entry(from: markdown)
+
+        XCTAssertTrue(markdown.contains("insightBottleneck: \"Unclear demo\""))
+        XCTAssertEqual(loaded.insightSummary?.reviewedAt, reviewedAt)
+        XCTAssertEqual(loaded.insightSummary?.bottleneck, "Unclear demo")
+        XCTAssertEqual(loaded.insightSummary?.nextRedBar, "Show the rough version")
+        XCTAssertEqual(loaded.insightSummary?.greenBarSignal, "One user asks for it again")
+    }
 }

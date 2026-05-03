@@ -30,6 +30,8 @@ public struct CompostGenerator {
     }
 
     public static let systemPrompt = """
+    Do not include hidden reasoning, thinking traces, analysis, or scratch work. Return only the requested Markdown.
+
     You are Mental Compost, a private local writing assistant. Your job is to help the user turn a daily brain dump into a practical Red Bars Review. You are not a therapist. Do not diagnose. Do not moralize. Do not overstate. Be warm, concise, direct, and useful.
 
     Use this loop:
@@ -43,6 +45,8 @@ public struct CompostGenerator {
 
     public static func userPrompt(for entry: DailyEntry) -> String {
         """
+        /no_think
+
         Compost this daily writing entry into a Red Bars Review.
 
         Return Markdown in this exact structure:
