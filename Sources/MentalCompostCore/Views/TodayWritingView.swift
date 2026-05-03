@@ -36,16 +36,10 @@ public struct TodayWritingView: View {
         ZStack(alignment: .bottom) {
             ritualBackground.ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                topStatus
-                    .padding(.horizontal, 34)
-                    .padding(.top, 28)
-                    .padding(.bottom, 10)
-
-                editorSurface
-                    .padding(.horizontal, 34)
-                    .padding(.bottom, 74)
-            }
+            editorSurface
+                .padding(.horizontal, 34)
+                .padding(.top, 26)
+                .padding(.bottom, 74)
 
             bottomBar
                 .padding(.horizontal, 22)
@@ -70,48 +64,6 @@ public struct TodayWritingView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: NSWindow.willExitFullScreenNotification)) { _ in
             isFullscreen = false
-        }
-    }
-
-    private var topStatus: some View {
-        VStack(spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Today’s Pile")
-                        .font(.system(size: 32, weight: .semibold, design: .serif))
-                    Text("750 words / 3 pages · dump the noise")
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-
-                HStack(spacing: 18) {
-                    statusMetric(title: "Words", value: "\(entryStore.todayEntry.wordCount)")
-                    statusMetric(title: "Streak", value: "\(entryStore.currentStreak)")
-                }
-            }
-
-            ProgressView(value: min(Double(entryStore.todayEntry.wordCount) / 750.0, 1.0))
-                .tint(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : MentalCompostColor.mossGreen)
-
-            HStack {
-                Text(statusMessage(for: entryStore.todayEntry.wordCount))
-                    .font(.callout)
-                    .foregroundStyle(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : .secondary)
-
-                Spacer()
-
-                if let error = entryStore.saveErrorMessage {
-                    Text(error)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                } else {
-                    Text("Saved locally")
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                }
-            }
         }
     }
 
@@ -146,6 +98,10 @@ public struct TodayWritingView: View {
 
     private var bottomBar: some View {
         HStack(spacing: 10) {
+            compactProgress
+
+            Divider().frame(height: 18)
+
             bottomButton(fontSizeTitle, systemImage: "textformat.size") {
                 cycleFontSize()
             }
@@ -200,14 +156,34 @@ public struct TodayWritingView: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
     }
 
-    private func statusMetric(title: String, value: String) -> some View {
-        VStack(alignment: .trailing, spacing: 2) {
-            Text(value)
-                .font(.title3.monospacedDigit())
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+    private var compactProgress: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 6) {
+                Text("\(entryStore.todayEntry.wordCount) / 750")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : .secondary)
+
+                Text("·")
+                    .foregroundStyle(.tertiary)
+
+                Text("Streak \(entryStore.currentStreak)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack(spacing: 8) {
+                ProgressView(value: min(Double(entryStore.todayEntry.wordCount) / 750.0, 1.0))
+                    .controlSize(.mini)
+                    .tint(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : MentalCompostColor.mossGreen)
+                    .frame(width: 116)
+
+                Text(entryStore.saveErrorMessage ?? statusMessage(for: entryStore.todayEntry.wordCount))
+                    .font(.caption2)
+                    .foregroundStyle(entryStore.saveErrorMessage == nil ? Color.secondary.opacity(0.65) : Color.red)
+                    .lineLimit(1)
+            }
         }
+        .frame(width: 260, alignment: .leading)
     }
 
     private func bottomButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
