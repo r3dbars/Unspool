@@ -4,11 +4,10 @@ import SwiftUI
 public struct TodayWritingView: View {
     @ObservedObject public var entryStore: EntryStore
     @ObservedObject public var compostStore: CompostReviewStore
+    public var onShowHistory: () -> Void
     @Environment(\.colorScheme) private var colorScheme
     @FocusState private var editorFocused: Bool
     @State private var showingCompost = false
-    @State private var timerRemaining = 15 * 60
-    @State private var timerIsRunning = false
     @State private var bottomBarHovered = false
     @State private var backspaceDisabled = false
     @State private var placeholder = TodayWritingView.placeholders.randomElement() ?? "Start anywhere."
@@ -18,7 +17,6 @@ public struct TodayWritingView: View {
     @AppStorage("writingFontSize") private var writingFontSize = 19.0
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
 
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private static let placeholders = [
         "Start with the mess.",
         "What keeps circling?",
@@ -28,9 +26,10 @@ public struct TodayWritingView: View {
         "Let it decompose."
     ]
 
-    public init(entryStore: EntryStore, compostStore: CompostReviewStore) {
+    public init(entryStore: EntryStore, compostStore: CompostReviewStore, onShowHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
         self.compostStore = compostStore
+        self.onShowHistory = onShowHistory
     }
 
     public var body: some View {
@@ -51,8 +50,9 @@ public struct TodayWritingView: View {
             bottomBar
                 .padding(.horizontal, 22)
                 .padding(.bottom, 16)
-                .opacity(timerIsRunning && !bottomBarHovered ? 0.18 : 1)
-                .animation(.easeInOut(duration: 0.2), value: timerIsRunning && !bottomBarHovered)
+                .opacity(bottomBarHovered ? 1 : 0)
+                .animation(.easeInOut(duration: 0.22), value: bottomBarHovered)
+                .contentShape(Rectangle())
                 .onHover { bottomBarHovered = $0 }
         }
         .frame(minWidth: 720, minHeight: 560)
@@ -64,14 +64,6 @@ public struct TodayWritingView: View {
         }
         .onAppear {
             editorFocused = true
-        }
-        .onReceive(timer) { _ in
-            guard timerIsRunning else { return }
-            if timerRemaining > 0 {
-                timerRemaining -= 1
-            } else {
-                timerIsRunning = false
-            }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSWindow.willEnterFullScreenNotification)) { _ in
             isFullscreen = true
@@ -154,19 +146,6 @@ public struct TodayWritingView: View {
 
     private var bottomBar: some View {
         HStack(spacing: 10) {
-            bottomButton(timerTitle, systemImage: timerIsRunning ? "pause.fill" : "play.fill") {
-                timerIsRunning.toggle()
-            }
-            .help("Start or pause a 15 minute writing timer")
-
-            bottomButton("Reset", systemImage: "arrow.counterclockwise") {
-                timerRemaining = 15 * 60
-                timerIsRunning = false
-            }
-            .help("Reset timer")
-
-            Divider().frame(height: 18)
-
             bottomButton(fontSizeTitle, systemImage: "textformat.size") {
                 cycleFontSize()
             }
@@ -200,7 +179,7 @@ public struct TodayWritingView: View {
             .help("Toggle light or dark writing mode")
 
             bottomButton("History", systemImage: "clock.arrow.circlepath") {
-                NSApp.sendAction(#selector(NSSplitViewController.toggleSidebar(_:)), to: nil, from: nil)
+                onShowHistory()
             }
             .help("Show previous days")
 
@@ -212,8 +191,8 @@ public struct TodayWritingView: View {
             .buttonStyle(.borderedProminent)
             .tint(MentalCompostColor.mossGreen)
             .controlSize(.small)
-            .disabled(entryStore.todayEntry.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            .help("Turn today’s page into editable compost")
+            .disabled(!entryStore.todayEntry.reachedGoal)
+            .help(entryStore.todayEntry.reachedGoal ? "Turn today’s page into editable compost" : "Compost unlocks after 750 words")
         }
         .font(.system(size: 12))
         .padding(.horizontal, 12)
@@ -261,12 +240,6 @@ public struct TodayWritingView: View {
 
     private var fontSizeTitle: String {
         "\(Int(writingFontSize))px"
-    }
-
-    private var timerTitle: String {
-        let minutes = timerRemaining / 60
-        let seconds = timerRemaining % 60
-        return String(format: "%d:%02d", minutes, seconds)
     }
 
     private func cycleFontStyle() {

@@ -4,6 +4,7 @@ public struct ContentView: View {
     @StateObject private var entryStore: EntryStore
     @StateObject private var compostStore: CompostReviewStore
     @SceneStorage("selectedEntryID") private var selectedEntryID = "today"
+    @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
 
@@ -13,7 +14,7 @@ public struct ContentView: View {
     }
 
     public var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             EntryListView(
                 todayEntry: entryStore.todayEntry,
                 previousEntries: entryStore.previousEntries,
@@ -22,11 +23,19 @@ public struct ContentView: View {
             )
         } detail: {
             if selectedEntryID == "today" {
-                TodayWritingView(entryStore: entryStore, compostStore: compostStore)
+                TodayWritingView(
+                    entryStore: entryStore,
+                    compostStore: compostStore,
+                    onShowHistory: showHistory
+                )
             } else if let entry = entryStore.visibleEntries.first(where: { $0.id == selectedEntryID }) {
                 PreviousEntryDetailView(entry: entry, entryStore: entryStore, compostStore: compostStore)
             } else {
-                TodayWritingView(entryStore: entryStore, compostStore: compostStore)
+                TodayWritingView(
+                    entryStore: entryStore,
+                    compostStore: compostStore,
+                    onShowHistory: showHistory
+                )
             }
         }
         .navigationTitle("Mental Compost")
@@ -43,6 +52,12 @@ public struct ContentView: View {
         case "light": .light
         case "dark": .dark
         default: nil
+        }
+    }
+
+    private func showHistory() {
+        withAnimation(.easeInOut(duration: 0.18)) {
+            columnVisibility = .all
         }
     }
 }

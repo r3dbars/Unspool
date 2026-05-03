@@ -33,6 +33,8 @@ public struct PreviousEntryDetailView: View {
                     Button(compostStore.hasReview(for: entry.date) ? "Open Compost" : "Compost This Day") {
                         showingCompost = true
                     }
+                    .disabled(!entry.reachedGoal)
+                    .help(entry.reachedGoal ? "Open or create compost for this day" : "Compost unlocks after 750 words")
                 }
 
                 Text(entry.body.isEmpty ? "No writing saved for this day." : entry.body)
