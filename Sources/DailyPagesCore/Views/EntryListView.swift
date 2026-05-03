@@ -32,7 +32,14 @@ public struct EntryListView: View {
             }
         }
         .listStyle(.sidebar)
-        .frame(minWidth: 220)
+        .safeAreaInset(edge: .bottom) {
+            Text("Private Markdown files. No sync.")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+        }
+        .frame(minWidth: 230)
     }
 
     private func entryRow(title: String, detail: String, reachedGoal: Bool) -> some View {

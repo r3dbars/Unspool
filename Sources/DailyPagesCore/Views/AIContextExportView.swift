@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 public struct AIContextExportView: View {
     public var entry: DailyEntry
@@ -9,6 +10,7 @@ public struct AIContextExportView: View {
     @State private var selectedContext = ""
     @State private var exportMessage: String?
     @State private var exportError: String?
+    @State private var copiedContext = false
 
     public init(entry: DailyEntry, exportStore: ContextExportStore, onExport: @escaping (URL) -> Void) {
         self.entry = entry
@@ -74,7 +76,13 @@ public struct AIContextExportView: View {
             HStack {
                 Button("Generate Simple Context Draft") {
                     selectedContext = AIContextDraftGenerator.draft(for: entry)
+                    copiedContext = false
                 }
+
+                Button(copiedContext ? "Copied" : "Copy Draft") {
+                    copyDraft()
+                }
+                .disabled(selectedContext.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
                 Spacer()
 
@@ -97,6 +105,15 @@ public struct AIContextExportView: View {
             onExport(url)
         } catch {
             exportError = "Could not export: \(error.localizedDescription)"
+        }
+    }
+
+    private func copyDraft() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(selectedContext, forType: .string)
+        copiedContext = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            copiedContext = false
         }
     }
 }

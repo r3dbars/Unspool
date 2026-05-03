@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
+        NSApp.windows.first?.center()
     }
 }
 
@@ -16,8 +17,11 @@ struct DailyPagesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .toolbar(.hidden, for: .windowToolbar)
         }
-        .windowStyle(.titleBar)
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unifiedCompact)
+        .defaultSize(width: 1120, height: 720)
 
         Settings {
             AppSettingsView()
