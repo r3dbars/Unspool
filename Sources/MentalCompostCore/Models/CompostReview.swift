@@ -12,11 +12,12 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
     public var sourceWordCount: Int
     public var generatedAt: Date
     public var generationMode: CompostGenerationMode
-    public var seeds: [String]
-    public var weeds: [String]
-    public var compost: [String]
-    public var fruit: [String]
-    public var weather: [String]
+    public var bottleneck: [String]
+    public var openLoops: [String]
+    public var decisions: [String]
+    public var smallestReversibleMove: [String]
+    public var nextRedBar: [String]
+    public var greenBarSignal: [String]
     public var userEditedMarkdown: String?
     public var exportedAt: Date?
 
@@ -26,11 +27,12 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
         sourceWordCount: Int,
         generatedAt: Date = Date(),
         generationMode: CompostGenerationMode,
-        seeds: [String] = [],
-        weeds: [String] = [],
-        compost: [String] = [],
-        fruit: [String] = [],
-        weather: [String] = [],
+        bottleneck: [String] = [],
+        openLoops: [String] = [],
+        decisions: [String] = [],
+        smallestReversibleMove: [String] = [],
+        nextRedBar: [String] = [],
+        greenBarSignal: [String] = [],
         userEditedMarkdown: String? = nil,
         exportedAt: Date? = nil
     ) {
@@ -40,11 +42,12 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
         self.sourceWordCount = sourceWordCount
         self.generatedAt = generatedAt
         self.generationMode = generationMode
-        self.seeds = seeds
-        self.weeds = weeds
-        self.compost = compost
-        self.fruit = fruit
-        self.weather = weather
+        self.bottleneck = bottleneck
+        self.openLoops = openLoops
+        self.decisions = decisions
+        self.smallestReversibleMove = smallestReversibleMove
+        self.nextRedBar = nextRedBar
+        self.greenBarSignal = greenBarSignal
         self.userEditedMarkdown = userEditedMarkdown
         self.exportedAt = exportedAt
     }
@@ -59,20 +62,25 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
         }
 
         return """
-        ## 🌱 Seeds
-        \(bulletList(seeds))
+        ## Red Bars Review
 
-        ## 🌿 Weeds
-        \(bulletList(weeds))
+        ### Bottleneck
+        \(bulletList(bottleneck))
 
-        ## 🍂 Compost
-        \(bulletList(compost))
+        ### Open Loops
+        \(bulletList(openLoops))
 
-        ## 🍎 Fruit
-        \(bulletList(fruit))
+        ### Decisions
+        \(bulletList(decisions))
 
-        ## 🌦️ Weather
-        \(weather.isEmpty ? "Today felt..." : weather.joined(separator: "\n"))
+        ### Smallest Reversible Move
+        \(bulletList(smallestReversibleMove))
+
+        ### Next Red Bar
+        \(bulletList(nextRedBar))
+
+        ### Green Bar Signal
+        \(bulletList(greenBarSignal))
         """
     }
 
@@ -83,11 +91,12 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
             sourceWordCount: sourceWordCount,
             generatedAt: generatedAt,
             generationMode: mode ?? generationMode,
-            seeds: seeds,
-            weeds: weeds,
-            compost: compost,
-            fruit: fruit,
-            weather: weather,
+            bottleneck: bottleneck,
+            openLoops: openLoops,
+            decisions: decisions,
+            smallestReversibleMove: smallestReversibleMove,
+            nextRedBar: nextRedBar,
+            greenBarSignal: greenBarSignal,
             userEditedMarkdown: markdown,
             exportedAt: exportedAt
         )
@@ -100,11 +109,12 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
             sourceWordCount: sourceWordCount,
             generatedAt: generatedAt,
             generationMode: generationMode,
-            seeds: seeds,
-            weeds: weeds,
-            compost: compost,
-            fruit: fruit,
-            weather: weather,
+            bottleneck: bottleneck,
+            openLoops: openLoops,
+            decisions: decisions,
+            smallestReversibleMove: smallestReversibleMove,
+            nextRedBar: nextRedBar,
+            greenBarSignal: greenBarSignal,
             userEditedMarkdown: userEditedMarkdown,
             exportedAt: date
         )
@@ -120,20 +130,25 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
     }
 
     public static let manualTemplateMarkdown = """
-    ## 🌱 Seeds
+    ## Red Bars Review
+
+    ### Bottleneck
     -
 
-    ## 🌿 Weeds
+    ### Open Loops
     -
 
-    ## 🍂 Compost
+    ### Decisions
     -
 
-    ## 🍎 Fruit
+    ### Smallest Reversible Move
     -
 
-    ## 🌦️ Weather
-    Today felt...
+    ### Next Red Bar
+    -
+
+    ### Green Bar Signal
+    -
     """
 
     private func bulletList(_ values: [String]) -> String {
@@ -143,4 +158,3 @@ public struct CompostReview: Identifiable, Equatable, Sendable {
         return values.map { "- \($0)" }.joined(separator: "\n")
     }
 }
-

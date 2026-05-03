@@ -1,21 +1,28 @@
 import Foundation
 
 public enum HeuristicCompostGenerator {
-    private static let seedWords = ["idea", "maybe", "could", "build", "app", "project", "experiment", "try", "someday"]
-    private static let weedWords = ["worry", "anxious", "stuck", "afraid", "overwhelmed", "frustrated", "pressure"]
-    private static let compostWords = ["failed", "messy", "hard", "confused", "tension", "struggle", "mistake"]
-    private static let fruitWords = ["decided", "next", "todo", "action", "ship", "finish", "commit", "important"]
-    private static let weatherWords = ["tired", "energized", "scattered", "calm", "excited", "heavy", "restless"]
+    private static let bottleneckWords = ["blocked", "blocking", "bottleneck", "stuck", "constraint", "hard", "can't", "cannot", "friction"]
+    private static let openLoopWords = ["worry", "anxious", "unfinished", "open loop", "keeps coming back", "distracted", "overwhelmed", "pressure"]
+    private static let decisionWords = ["decide", "decided", "decision", "choose", "choice", "unclear", "whether", "option"]
+    private static let reversibleMoveWords = ["try", "test", "experiment", "small", "next", "todo", "action", "commit", "ship"]
+    private static let redBarWords = ["red bar", "failure", "failed", "risk", "constraint", "uncomfortable", "avoid", "hard thing"]
+    private static let greenBarWords = ["green bar", "signal", "proof", "progress", "working", "traction", "relief", "done"]
 
     public static func generate(for entry: DailyEntry) -> CompostReview {
         let paragraphs = paragraphs(from: entry.body)
-        let seeds = matchingParagraphs(paragraphs, keywords: seedWords)
-        let weeds = matchingParagraphs(paragraphs, keywords: weedWords)
-        let compost = matchingParagraphs(paragraphs, keywords: compostWords)
-        let fruit = matchingParagraphs(paragraphs, keywords: fruitWords)
-        let weather = weatherSummary(from: entry.body)
+        let bottleneck = matchingParagraphs(paragraphs, keywords: bottleneckWords)
+        let openLoops = matchingParagraphs(paragraphs, keywords: openLoopWords)
+        let decisions = matchingParagraphs(paragraphs, keywords: decisionWords)
+        let smallestMove = matchingParagraphs(paragraphs, keywords: reversibleMoveWords)
+        let nextRedBar = matchingParagraphs(paragraphs, keywords: redBarWords)
+        let greenBarSignal = matchingParagraphs(paragraphs, keywords: greenBarWords)
 
-        if seeds.isEmpty, weeds.isEmpty, compost.isEmpty, fruit.isEmpty, weather.isEmpty {
+        if bottleneck.isEmpty,
+           openLoops.isEmpty,
+           decisions.isEmpty,
+           smallestMove.isEmpty,
+           nextRedBar.isEmpty,
+           greenBarSignal.isEmpty {
             return CompostReview.manualTemplate(for: entry)
         }
 
@@ -23,11 +30,12 @@ public enum HeuristicCompostGenerator {
             entryDate: entry.date,
             sourceWordCount: entry.wordCount,
             generationMode: .heuristic,
-            seeds: seeds,
-            weeds: weeds,
-            compost: compost,
-            fruit: fruit,
-            weather: weather.isEmpty ? ["Today felt..."] : weather
+            bottleneck: bottleneck,
+            openLoops: openLoops,
+            decisions: decisions,
+            smallestReversibleMove: smallestMove,
+            nextRedBar: nextRedBar,
+            greenBarSignal: greenBarSignal
         )
     }
 
@@ -42,12 +50,5 @@ public enum HeuristicCompostGenerator {
             let lowered = paragraph.lowercased()
             return keywords.contains { lowered.contains($0) }
         }
-    }
-
-    private static func weatherSummary(from text: String) -> [String] {
-        let lowered = text.lowercased()
-        let matches = weatherWords.filter { lowered.contains($0) }
-        guard !matches.isEmpty else { return [] }
-        return ["Today’s weather: \(matches.joined(separator: ", "))."]
     }
 }

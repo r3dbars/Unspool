@@ -21,7 +21,7 @@ public struct CompostExportEditor: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Export Selected Compost")
+                    Text("Export Selected Review")
                         .font(.title.bold())
                     Text("Only export what you want your AI tools to remember.")
                         .foregroundStyle(.secondary)

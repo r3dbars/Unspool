@@ -19,7 +19,7 @@ public enum MarkdownCompostSerializer {
         lines.append(contentsOf: [
             "---",
             "",
-            "# Mental Compost Review — \(review.dayString)",
+            "# Red Bars Review — \(review.dayString)",
             "",
             review.markdownBody
         ])
@@ -82,7 +82,7 @@ public enum MarkdownCompostSerializer {
         while lines.first?.isEmpty == true {
             lines.removeFirst()
         }
-        if lines.first?.hasPrefix("# Mental Compost Review") == true {
+        if lines.first?.hasPrefix("# Mental Compost Review") == true || lines.first?.hasPrefix("# Red Bars Review") == true {
             lines.removeFirst()
         }
         if lines.first?.isEmpty == true {

@@ -10,7 +10,7 @@
 ## Core Pieces
 
 - `DailyEntry`: one writing day, word count, goal state, timestamps, optional compost/export timestamps.
-- `CompostReview`: one review for a daily entry with Seeds, Weeds, Compost, Fruit, and Weather.
+- `CompostReview`: one review for a daily entry using the Red Bars loop.
 - `AppSettings`: minimal local-first settings model and defaults.
 - `WordCounter`: small reusable whitespace-based counter.
 - `MarkdownEntrySerializer`: frontmatter Markdown serialization and loading for daily entries.
@@ -39,7 +39,7 @@
 - Markdown serialize/save/load round trip.
 - Streak calculation.
 - Heuristic compost extraction and fallback.
-- Local AI mock success/failure without network.
+- Local model mock success/failure without network.
 - Export folder choice and selected-compost-only export.
 
 ## Verification

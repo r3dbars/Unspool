@@ -142,13 +142,13 @@ public struct TodayWritingView: View {
             Button {
                 showingCompost = true
             } label: {
-                Label("Compost Today’s Page", systemImage: "leaf")
+                Label(compostStore.hasReview(for: entryStore.todayEntry.date) ? "Open Review" : "AI Insights", systemImage: "leaf")
             }
             .buttonStyle(.borderedProminent)
             .tint(MentalCompostColor.mossGreen)
             .controlSize(.small)
             .disabled(!entryStore.todayEntry.reachedGoal)
-            .help(entryStore.todayEntry.reachedGoal ? "Turn today’s page into editable compost" : "Compost unlocks after 750 words")
+            .help(entryStore.todayEntry.reachedGoal ? "Optional Red Bars Review with local model or offline draft" : "Insights unlock after 750 words")
         }
         .font(.system(size: 12))
         .padding(.horizontal, 12)
@@ -251,7 +251,7 @@ public struct TodayWritingView: View {
         case 500...749:
             "Let it decompose a little longer."
         default:
-            "Fruit found. You showed up."
+            "Green bar. Page saved."
         }
     }
 }

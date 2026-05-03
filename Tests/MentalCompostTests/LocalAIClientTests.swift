@@ -4,8 +4,10 @@ import XCTest
 final class LocalAIClientTests: XCTestCase {
     func testMockClientSuccessGeneratesLocalAIReview() async throws {
         let markdown = """
-        ## 🌱 Seeds
-        - Build the tiny app.
+        ## Red Bars Review
+
+        ### Bottleneck
+        - The unclear demo.
         """
         let client = MockLocalAIClient(result: .success(markdown))
         let generator = CompostGenerator(localAIClient: client)
@@ -14,7 +16,7 @@ final class LocalAIClientTests: XCTestCase {
         let review = try await generator.generateWithLocalAI(for: entry, model: "test-model")
 
         XCTAssertEqual(review.generationMode, .localAI)
-        XCTAssertTrue(review.markdownBody.contains("Build the tiny app"))
+        XCTAssertTrue(review.markdownBody.contains("The unclear demo"))
     }
 
     func testMockClientFailureIsHandledWithoutRealNetwork() async {
@@ -24,7 +26,7 @@ final class LocalAIClientTests: XCTestCase {
 
         do {
             _ = try await generator.generateWithLocalAI(for: entry, model: "test-model")
-            XCTFail("Expected local AI failure")
+            XCTFail("Expected local model failure")
         } catch {
             XCTAssertEqual(error as? LocalAIClientError, .unavailable)
         }

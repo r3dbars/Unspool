@@ -30,11 +30,11 @@ public struct PreviousEntryDetailView: View {
                             .foregroundStyle(.green)
                     }
 
-                    Button(compostStore.hasReview(for: entry.date) ? "Open Compost" : "Compost This Day") {
+                    Button(compostStore.hasReview(for: entry.date) ? "Open Review" : "AI Insights") {
                         showingCompost = true
                     }
                     .disabled(!entry.reachedGoal)
-                    .help(entry.reachedGoal ? "Open or create compost for this day" : "Compost unlocks after 750 words")
+                    .help(entry.reachedGoal ? "Open or create a Red Bars Review for this day" : "Insights unlock after 750 words")
                 }
 
                 Text(entry.body.isEmpty ? "No writing saved for this day." : entry.body)

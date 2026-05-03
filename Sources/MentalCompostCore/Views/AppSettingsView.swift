@@ -41,8 +41,8 @@ public struct AppSettingsView: View {
                 }
             }
 
-            Section("Local AI") {
-                Toggle("Local AI enabled", isOn: $localAIEnabled)
+            Section("Local Model") {
+                Toggle("Use local model when reviewing", isOn: $localAIEnabled)
 
                 TextField("Endpoint URL", text: $localAIEndpointURL)
                     .textFieldStyle(.roundedBorder)
@@ -57,7 +57,7 @@ public struct AppSettingsView: View {
                 }
 
                 HStack {
-                    Button("Test Local AI") {
+                    Button("Test Local Model") {
                         testLocalAI()
                     }
 
@@ -139,14 +139,13 @@ public struct AppSettingsView: View {
                     temperature: 0
                 )
                 await MainActor.run {
-                    localAITestMessage = "Local AI responded."
+                    localAITestMessage = "Local model responded."
                 }
             } catch {
                 await MainActor.run {
-                    localAITestMessage = "Local AI unavailable."
+                    localAITestMessage = "Local model unavailable."
                 }
             }
         }
     }
 }
-

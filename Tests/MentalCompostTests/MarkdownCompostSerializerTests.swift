@@ -6,11 +6,13 @@ final class MarkdownCompostSerializerTests: XCTestCase {
         let directory = try temporaryDirectory()
         let fileURL = directory.appendingPathComponent("2026-05-02-compost.md")
         let body = """
-        ## 🌱 Seeds
+        ## Red Bars Review
+
+        ### Bottleneck
         - Build a small thing.
 
-        ## 🌦️ Weather
-        Today felt calm.
+        ### Green Bar Signal
+        - One useful reply.
         """
         let review = CompostReview(
             entryDate: fixedDate("2026-05-02"),

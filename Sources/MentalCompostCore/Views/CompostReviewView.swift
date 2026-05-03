@@ -31,8 +31,8 @@ public struct CompostReviewView: View {
 
             if localAIUnavailableMessageIsUseful {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Local AI isn’t running, but the pile is still yours.")
-                    Text("You can manually compost today’s page or use the simple offline heuristic.")
+                    Text("Local model isn’t running, but the page is already saved.")
+                    Text("You can write the Red Bars Review yourself or use the simple offline draft.")
                 }
                 .font(.callout)
                 .foregroundStyle(.secondary)
@@ -93,9 +93,9 @@ public struct CompostReviewView: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Compost Review")
+                Text("Red Bars Review")
                     .font(.title.bold())
-                Text("Possible seeds. Possible weeds. Nothing leaves your Mac unless you choose.")
+                Text("Find the bottleneck, choose the next red bar, and name the green-bar signal.")
                     .foregroundStyle(.secondary)
             }
 
@@ -109,12 +109,12 @@ public struct CompostReviewView: View {
 
     private var actions: some View {
         HStack {
-            Button("Regenerate with Local AI") {
+            Button("Use Local Model") {
                 generateWithLocalAI()
             }
             .disabled(isGenerating)
 
-            Button("Use Simple Local Heuristic") {
+            Button("Use Simple Offline Draft") {
                 useHeuristic()
             }
 
@@ -128,7 +128,7 @@ public struct CompostReviewView: View {
                 saveCurrentReview()
             }
 
-            Button("Export Selected Compost") {
+            Button("Export Selected Review") {
                 saveCurrentReview()
                 showingExportEditor = true
             }
@@ -149,18 +149,18 @@ public struct CompostReviewView: View {
 
     private func generateWithLocalAI() {
         guard localAIEnabled else {
-            errorMessage = "Local AI is off. Turn it on in Settings or use the simple offline heuristic."
+            errorMessage = "Local model is off. Turn it on in Settings or use the simple offline draft."
             return
         }
 
         guard let endpoint = URL(string: localAIEndpointURL) else {
-            errorMessage = "The local AI endpoint URL is invalid."
+            errorMessage = "The local model endpoint URL is invalid."
             return
         }
 
         isGenerating = true
         errorMessage = nil
-        statusMessage = "Composting locally..."
+        statusMessage = "Reviewing locally..."
 
         Task {
             do {
@@ -173,13 +173,13 @@ public struct CompostReviewView: View {
                     draftMarkdown = review.markdownBody
                     compostStore.save(review)
                     onSave(review)
-                    statusMessage = "Local AI composted the pile. Edit anything before export."
+                    statusMessage = "Local model drafted a Red Bars Review. Edit anything before export."
                     isGenerating = false
                 }
             } catch {
                 await MainActor.run {
-                    errorMessage = "Local AI isn’t running, but the pile is still yours."
-                    statusMessage = "Use the simple offline heuristic or edit the template by hand."
+                    errorMessage = "Local model isn’t running, but the page is already saved."
+                    statusMessage = "Use the simple offline draft or edit the template by hand."
                     isGenerating = false
                 }
             }
@@ -193,7 +193,7 @@ public struct CompostReviewView: View {
         compostStore.save(review)
         onSave(review)
         errorMessage = nil
-        statusMessage = "Simple local heuristic created a draft. Edit freely."
+        statusMessage = "Simple offline draft created. Edit freely."
     }
 
     private func saveCurrentReview() {
@@ -201,7 +201,7 @@ public struct CompostReviewView: View {
         activeReview = review
         compostStore.save(review)
         onSave(review)
-        statusMessage = "Compost review saved locally."
+        statusMessage = "Red Bars Review saved locally."
     }
 
     private func currentReview() -> CompostReview {
@@ -211,7 +211,6 @@ public struct CompostReviewView: View {
     private func copyMarkdown() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(draftMarkdown, forType: .string)
-        statusMessage = "Copied compost Markdown."
+        statusMessage = "Copied review Markdown."
     }
 }
-
