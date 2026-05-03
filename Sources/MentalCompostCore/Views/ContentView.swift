@@ -26,7 +26,7 @@ public struct ContentView: View {
                 TodayWritingView(
                     entryStore: entryStore,
                     compostStore: compostStore,
-                    onShowHistory: showHistory
+                    onToggleHistory: toggleHistory
                 )
             } else if let entry = entryStore.visibleEntries.first(where: { $0.id == selectedEntryID }) {
                 PreviousEntryDetailView(entry: entry, entryStore: entryStore, compostStore: compostStore)
@@ -34,7 +34,7 @@ public struct ContentView: View {
                 TodayWritingView(
                     entryStore: entryStore,
                     compostStore: compostStore,
-                    onShowHistory: showHistory
+                    onToggleHistory: toggleHistory
                 )
             }
         }
@@ -55,9 +55,9 @@ public struct ContentView: View {
         }
     }
 
-    private func showHistory() {
+    private func toggleHistory() {
         withAnimation(.easeInOut(duration: 0.18)) {
-            columnVisibility = .all
+            columnVisibility = columnVisibility == .detailOnly ? .all : .detailOnly
         }
     }
 }

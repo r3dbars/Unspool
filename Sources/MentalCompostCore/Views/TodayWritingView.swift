@@ -4,7 +4,7 @@ import SwiftUI
 public struct TodayWritingView: View {
     @ObservedObject public var entryStore: EntryStore
     @ObservedObject public var compostStore: CompostReviewStore
-    public var onShowHistory: () -> Void
+    public var onToggleHistory: () -> Void
     @Environment(\.colorScheme) private var colorScheme
     @FocusState private var editorFocused: Bool
     @State private var showingCompost = false
@@ -26,10 +26,10 @@ public struct TodayWritingView: View {
         "Let it decompose."
     ]
 
-    public init(entryStore: EntryStore, compostStore: CompostReviewStore, onShowHistory: @escaping () -> Void = {}) {
+    public init(entryStore: EntryStore, compostStore: CompostReviewStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
         self.compostStore = compostStore
-        self.onShowHistory = onShowHistory
+        self.onToggleHistory = onToggleHistory
     }
 
     public var body: some View {
@@ -179,7 +179,7 @@ public struct TodayWritingView: View {
             .help("Toggle light or dark writing mode")
 
             bottomButton("History", systemImage: "clock.arrow.circlepath") {
-                onShowHistory()
+                onToggleHistory()
             }
             .help("Show previous days")
 
