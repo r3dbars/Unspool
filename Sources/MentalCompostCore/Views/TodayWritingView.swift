@@ -3,11 +3,9 @@ import SwiftUI
 
 public struct TodayWritingView: View {
     @ObservedObject public var entryStore: EntryStore
-    @ObservedObject public var compostStore: CompostReviewStore
     public var onToggleHistory: () -> Void
     @Environment(\.colorScheme) private var colorScheme
     @FocusState private var editorFocused: Bool
-    @State private var showingCompost = false
     @State private var bottomBarHovered = false
     @State private var backspaceDisabled = false
     @State private var placeholder = TodayWritingView.placeholders.randomElement() ?? "Start anywhere."
@@ -18,17 +16,16 @@ public struct TodayWritingView: View {
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
 
     private static let placeholders = [
-        "Start with the mess.",
+        "Start anywhere.",
         "What keeps circling?",
         "One honest sentence.",
-        "Dump the noise.",
+        "Unspool the noise.",
         "Write the thing under the thing.",
-        "Let it decompose."
+        "Get it out of your head."
     ]
 
-    public init(entryStore: EntryStore, compostStore: CompostReviewStore, onToggleHistory: @escaping () -> Void = {}) {
+    public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
-        self.compostStore = compostStore
         self.onToggleHistory = onToggleHistory
     }
 
@@ -51,18 +48,6 @@ public struct TodayWritingView: View {
         }
         .frame(minWidth: 720, minHeight: 560)
         .background(BackspaceGuardView(isEnabled: backspaceDisabled).frame(width: 0, height: 0))
-        .sheet(isPresented: $showingCompost) {
-            CompostReviewView(
-                entry: entryStore.todayEntry,
-                compostStore: compostStore,
-                onSave: { review in
-                    entryStore.markComposted(for: review.entryDate, at: review.generatedAt)
-                },
-                onApplyToEntry: { review in
-                    entryStore.applyInsights(from: review)
-                }
-            )
-        }
         .onAppear {
             editorFocused = true
         }
@@ -145,17 +130,6 @@ public struct TodayWritingView: View {
                 onToggleHistory()
             }
             .help("Show previous days")
-
-            Button {
-                showingCompost = true
-            } label: {
-                Label(compostStore.hasReview(for: entryStore.todayEntry.date) ? "Open Review" : "AI Insights", systemImage: "leaf")
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(MentalCompostColor.mossGreen)
-            .controlSize(.small)
-            .disabled(!entryStore.todayEntry.reachedGoal)
-            .help(entryStore.todayEntry.reachedGoal ? "Optional Red Bars Review with local model or offline draft" : "Insights unlock after 750 words")
         }
         .font(.system(size: 12))
         .padding(.horizontal, 12)
@@ -250,15 +224,15 @@ public struct TodayWritingView: View {
     private func statusMessage(for wordCount: Int) -> String {
         switch wordCount {
         case 0:
-            "Start with the mess. This stays private."
+            "Start anywhere. This stays private."
         case 1...249:
-            "The pile is warming up."
+            "Keep going."
         case 250...499:
-            "Something useful is forming."
+            "The page is opening up."
         case 500...749:
-            "Let it decompose a little longer."
+            "A little more out of your head."
         default:
-            "Green bar. Page saved."
+            "Page saved."
         }
     }
 }

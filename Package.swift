@@ -3,16 +3,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "MentalCompost",
+    name: "Unspool",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "MentalCompost", targets: ["MentalCompost"])
+        .executable(name: "Unspool", targets: ["Unspool"])
     ],
     targets: [
         .executableTarget(
-            name: "MentalCompost",
+            name: "Unspool",
             dependencies: ["MentalCompostCore"],
             path: "Sources/MentalCompost"
         ),

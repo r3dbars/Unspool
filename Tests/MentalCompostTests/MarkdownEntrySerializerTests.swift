@@ -13,11 +13,11 @@ final class MarkdownEntrySerializerTests: XCTestCase {
         let markdown = MarkdownEntrySerializer.markdown(for: entry)
 
         XCTAssertTrue(markdown.contains("date: 2026-05-02"))
-        XCTAssertTrue(markdown.contains("app: Mental Compost"))
+        XCTAssertTrue(markdown.contains("app: Unspool"))
         XCTAssertTrue(markdown.contains("type: daily-entry"))
         XCTAssertTrue(markdown.contains("wordCount: 9"))
         XCTAssertTrue(markdown.contains("reachedGoal: false"))
-        XCTAssertTrue(markdown.contains("# Mental Compost — 2026-05-02"))
+        XCTAssertTrue(markdown.contains("# Unspool — 2026-05-02"))
         XCTAssertTrue(markdown.hasSuffix(entry.body))
     }
 

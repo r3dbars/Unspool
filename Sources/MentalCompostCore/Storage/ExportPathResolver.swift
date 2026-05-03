@@ -10,7 +10,7 @@ public struct ExportPathResolver {
         fileManager: FileManager = .default,
         customExportDirectory: URL? = nil,
         applicationSupportDirectory: URL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Mental Compost", isDirectory: true),
+            .appendingPathComponent("Unspool", isDirectory: true),
         documentsDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     ) {
         self.fileManager = fileManager

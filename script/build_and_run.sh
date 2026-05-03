@@ -2,8 +2,8 @@
 set -euo pipefail
 
 MODE="${1:-run}"
-APP_NAME="MentalCompost"
-BUNDLE_ID="com.redbars.MentalCompost"
+APP_NAME="Unspool"
+BUNDLE_ID="com.redbars.Unspool"
 MIN_SYSTEM_VERSION="14.0"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -35,7 +35,9 @@ cat >"$INFO_PLIST" <<PLIST
   <key>CFBundleIdentifier</key>
   <string>$BUNDLE_ID</string>
   <key>CFBundleName</key>
-  <string>Mental Compost</string>
+  <string>Unspool</string>
+  <key>CFBundleDisplayName</key>
+  <string>Unspool</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>LSMinimumSystemVersion</key>

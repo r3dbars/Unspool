@@ -15,7 +15,7 @@ public final class CompostReviewStore: ObservableObject {
 
     nonisolated public static func defaultCompostDirectory() -> URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Mental Compost", isDirectory: true)
+            .appendingPathComponent("Unspool", isDirectory: true)
             .appendingPathComponent("Compost", isDirectory: true)
     }
 

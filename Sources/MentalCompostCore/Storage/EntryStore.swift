@@ -19,7 +19,7 @@ public final class EntryStore: ObservableObject {
 
     nonisolated public static func defaultEntriesDirectory() -> URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Mental Compost", isDirectory: true)
+            .appendingPathComponent("Unspool", isDirectory: true)
             .appendingPathComponent("Entries", isDirectory: true)
     }
 

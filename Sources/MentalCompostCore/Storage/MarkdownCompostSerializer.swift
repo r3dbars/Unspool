@@ -4,7 +4,7 @@ public enum MarkdownCompostSerializer {
     public static func markdown(for review: CompostReview) -> String {
         var lines: [String] = [
             "---",
-            "app: Mental Compost",
+            "app: Unspool",
             "type: compost-review",
             "date: \(review.dayString)",
             "sourceWordCount: \(review.sourceWordCount)",

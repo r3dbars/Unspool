@@ -14,7 +14,6 @@ public struct AppSettingsView: View {
         Form {
             Section("Storage") {
                 pathRow("Entries", url: EntryStore.defaultEntriesDirectory())
-                pathRow("Compost", url: CompostReviewStore.defaultCompostDirectory())
                 pathRow("AI context exports", url: effectiveExportDirectory)
 
                 HStack {
@@ -42,7 +41,7 @@ public struct AppSettingsView: View {
             }
 
             Section("Local Model") {
-                Toggle("Use local model when reviewing", isOn: $localAIEnabled)
+                Toggle("Use local model for future reviews", isOn: $localAIEnabled)
 
                 Text("Recommended: \(LocalModelDefaults.displayName)")
                     .font(.caption)

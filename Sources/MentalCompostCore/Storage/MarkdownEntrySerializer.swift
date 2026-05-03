@@ -4,7 +4,7 @@ public enum MarkdownEntrySerializer {
     public static func markdown(for entry: DailyEntry) -> String {
         var lines: [String] = [
             "---",
-            "app: Mental Compost",
+            "app: Unspool",
             "type: daily-entry",
             "date: \(entry.dayString)",
             "wordCount: \(entry.wordCount)",
@@ -35,7 +35,7 @@ public enum MarkdownEntrySerializer {
         lines.append(contentsOf: [
             "---",
             "",
-            "# Mental Compost — \(entry.dayString)",
+            "# Unspool — \(entry.dayString)",
             "",
             entry.body
         ])
@@ -111,7 +111,7 @@ public enum MarkdownEntrySerializer {
         while lines.first?.isEmpty == true {
             lines.removeFirst()
         }
-        if lines.first?.hasPrefix("# Mental Compost") == true {
+        if lines.first?.hasPrefix("# Unspool") == true || lines.first?.hasPrefix("# Mental Compost") == true {
             lines.removeFirst()
         }
         if lines.first?.isEmpty == true {

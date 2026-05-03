@@ -2,14 +2,9 @@ import SwiftUI
 
 public struct PreviousEntryDetailView: View {
     public var entry: DailyEntry
-    @ObservedObject public var entryStore: EntryStore
-    @ObservedObject public var compostStore: CompostReviewStore
-    @State private var showingCompost = false
 
-    public init(entry: DailyEntry, entryStore: EntryStore, compostStore: CompostReviewStore) {
+    public init(entry: DailyEntry) {
         self.entry = entry
-        self.entryStore = entryStore
-        self.compostStore = compostStore
     }
 
     public var body: some View {
@@ -29,12 +24,6 @@ public struct PreviousEntryDetailView: View {
                         Label("Goal reached", systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     }
-
-                    Button(compostStore.hasReview(for: entry.date) ? "Open Review" : "AI Insights") {
-                        showingCompost = true
-                    }
-                    .disabled(!entry.reachedGoal)
-                    .help(entry.reachedGoal ? "Open or create a Red Bars Review for this day" : "Insights unlock after 750 words")
                 }
 
                 Text(entry.body.isEmpty ? "No writing saved for this day." : entry.body)
@@ -47,17 +36,5 @@ public struct PreviousEntryDetailView: View {
             .frame(maxWidth: 840)
         }
         .frame(minWidth: 640, minHeight: 520)
-        .sheet(isPresented: $showingCompost) {
-            CompostReviewView(
-                entry: entry,
-                compostStore: compostStore,
-                onSave: { review in
-                    entryStore.markComposted(for: review.entryDate, at: review.generatedAt)
-                },
-                onApplyToEntry: { review in
-                    entryStore.applyInsights(from: review)
-                }
-            )
-        }
     }
 }

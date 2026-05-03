@@ -2,15 +2,13 @@ import SwiftUI
 
 public struct ContentView: View {
     @StateObject private var entryStore: EntryStore
-    @StateObject private var compostStore: CompostReviewStore
     @SceneStorage("selectedEntryID") private var selectedEntryID = "today"
     @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
 
-    public init(entryStore: EntryStore = EntryStore(), compostStore: CompostReviewStore = CompostReviewStore()) {
+    public init(entryStore: EntryStore = EntryStore()) {
         _entryStore = StateObject(wrappedValue: entryStore)
-        _compostStore = StateObject(wrappedValue: compostStore)
     }
 
     public var body: some View {
@@ -18,27 +16,24 @@ public struct ContentView: View {
             EntryListView(
                 todayEntry: entryStore.todayEntry,
                 previousEntries: entryStore.previousEntries,
-                compostStore: compostStore,
                 selectedEntryID: $selectedEntryID
             )
         } detail: {
             if selectedEntryID == "today" {
                 TodayWritingView(
                     entryStore: entryStore,
-                    compostStore: compostStore,
                     onToggleHistory: toggleHistory
                 )
             } else if let entry = entryStore.visibleEntries.first(where: { $0.id == selectedEntryID }) {
-                PreviousEntryDetailView(entry: entry, entryStore: entryStore, compostStore: compostStore)
+                PreviousEntryDetailView(entry: entry)
             } else {
                 TodayWritingView(
                     entryStore: entryStore,
-                    compostStore: compostStore,
                     onToggleHistory: toggleHistory
                 )
             }
         }
-        .navigationTitle("Mental Compost")
+        .navigationTitle("Unspool")
         .preferredColorScheme(preferredColorScheme)
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase != .active {

@@ -1,8 +1,8 @@
-# Mental Compost MVP Plan
+# Unspool MVP Plan
 
 ## Shape
 
-- Refactor the existing SwiftPM macOS SwiftUI app into `MentalCompost`.
+- Refactor the existing SwiftPM macOS SwiftUI app into `Unspool`.
 - Keep a small executable target and a testable `MentalCompostCore` target.
 - Use local Markdown files as the source of truth for entries and compost reviews.
 - Keep the run script staging a small `.app` bundle from SwiftPM output.

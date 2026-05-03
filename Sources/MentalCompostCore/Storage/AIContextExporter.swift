@@ -11,12 +11,12 @@ public struct AIContextExporter {
         let destinationDirectory = resolver.exportDirectory
         try resolver.fileManager.createDirectory(at: destinationDirectory, withIntermediateDirectories: true)
         let fileURL = destinationDirectory
-            .appendingPathComponent("\(review.dayString)-mental-compost-ai-context.md")
+            .appendingPathComponent("\(review.dayString)-unspool-ai-context.md")
 
         let markdown = """
-        # Mental Compost AI Context — \(review.dayString)
+        # Unspool AI Context — \(review.dayString)
 
-        Source: Mental Compost
+        Source: Unspool
         Date: \(review.dayString)
         Word count: \(review.sourceWordCount)
         Privacy note: The user explicitly selected/promoted this content for AI context.

@@ -3,18 +3,15 @@ import SwiftUI
 public struct EntryListView: View {
     public var todayEntry: DailyEntry
     public var previousEntries: [DailyEntry]
-    @ObservedObject public var compostStore: CompostReviewStore
     @Binding public var selectedEntryID: String
 
     public init(
         todayEntry: DailyEntry,
         previousEntries: [DailyEntry],
-        compostStore: CompostReviewStore,
         selectedEntryID: Binding<String>
     ) {
         self.todayEntry = todayEntry
         self.previousEntries = previousEntries
-        self.compostStore = compostStore
         _selectedEntryID = selectedEntryID
     }
 
@@ -24,8 +21,7 @@ public struct EntryListView: View {
                 entryRow(
                     title: "Today",
                     detail: detail(for: todayEntry),
-                    reachedGoal: todayEntry.reachedGoal,
-                    composted: compostStore.hasReview(for: todayEntry.date)
+                    reachedGoal: todayEntry.reachedGoal
                 )
                     .tag("today")
             }
@@ -36,8 +32,7 @@ public struct EntryListView: View {
                         entryRow(
                             title: entry.dayString,
                             detail: detail(for: entry),
-                            reachedGoal: entry.reachedGoal,
-                            composted: compostStore.hasReview(for: entry.date)
+                            reachedGoal: entry.reachedGoal
                         )
                         .tag(entry.id)
                     }
@@ -46,7 +41,7 @@ public struct EntryListView: View {
         }
         .listStyle(.sidebar)
         .safeAreaInset(edge: .bottom) {
-            Text("Local pages. Local compost. No sync.")
+            Text("Local pages. No sync.")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
                 .padding(.horizontal, 12)
@@ -55,10 +50,10 @@ public struct EntryListView: View {
         .frame(minWidth: 230)
     }
 
-    private func entryRow(title: String, detail: String, reachedGoal: Bool, composted: Bool) -> some View {
+    private func entryRow(title: String, detail: String, reachedGoal: Bool) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: composted ? "leaf.fill" : (reachedGoal ? "checkmark.circle.fill" : "doc.text"))
-                .foregroundStyle(composted ? .green : (reachedGoal ? .green : .secondary))
+            Image(systemName: reachedGoal ? "checkmark.circle.fill" : "doc.text")
+                .foregroundStyle(reachedGoal ? .green : .secondary)
                 .frame(width: 16)
 
             VStack(alignment: .leading, spacing: 2) {
@@ -73,7 +68,6 @@ public struct EntryListView: View {
     }
 
     private func detail(for entry: DailyEntry) -> String {
-        let compost = compostStore.hasReview(for: entry.date) ? " · composted" : ""
-        return "\(entry.wordCount) words\(compost)"
+        "\(entry.wordCount) words"
     }
 }
