@@ -14,9 +14,10 @@ public struct TodayWritingView: View {
     @AppStorage("writingFontSize") private var writingFontSize = 19.0
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
     private let editorHorizontalInset = 18.0
-    private let editorTopInset = 112.0
-    private let editorBottomInset = 20.0
+    private let editorTopInset = 64.0
+    private let editorBottomInset = 44.0
     private let placeholderCaretGap = 7.0
+    private let fadeEdgeHeight = 42.0
 
     public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
@@ -29,8 +30,8 @@ public struct TodayWritingView: View {
 
             editorSurface
                 .padding(.horizontal, 34)
-                .padding(.top, 26)
-                .padding(.bottom, 74)
+                .padding(.top, 14)
+                .padding(.bottom, 58)
 
             bottomBar
                 .padding(.horizontal, 22)
@@ -68,6 +69,7 @@ public struct TodayWritingView: View {
             .padding(.bottom, editorBottomInset)
             .padding(.horizontal, editorHorizontalInset)
             .frame(maxWidth: 720, maxHeight: .infinity)
+            .mask(editorFadeMask)
             .focused($editorFocused)
             .accessibilityLabel("Today's daily page")
 
@@ -87,7 +89,7 @@ public struct TodayWritingView: View {
     }
 
     private var bottomBar: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 6) {
             compactProgress
 
             Divider().frame(height: 18)
@@ -129,9 +131,9 @@ public struct TodayWritingView: View {
             }
             .help("Show previous days")
         }
-        .font(.system(size: 12))
-        .padding(.horizontal, 12)
-        .padding(.vertical, 9)
+        .font(.system(size: 12, weight: .medium))
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
     }
 
@@ -168,10 +170,35 @@ public struct TodayWritingView: View {
     private func bottomButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: systemImage)
+                .labelStyle(.titleAndIcon)
+                .padding(.horizontal, 8)
+                .frame(height: 28)
+                .contentShape(RoundedRectangle(cornerRadius: 6))
         }
         .buttonStyle(.plain)
         .foregroundStyle(.secondary)
-        .labelStyle(.titleAndIcon)
+        .background(Color.primary.opacity(0.001), in: RoundedRectangle(cornerRadius: 6))
+    }
+
+    private var editorFadeMask: some View {
+        VStack(spacing: 0) {
+            LinearGradient(
+                colors: [.clear, .black],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: fadeEdgeHeight)
+
+            Rectangle()
+                .fill(.black)
+
+            LinearGradient(
+                colors: [.black, .clear],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: fadeEdgeHeight)
+        }
     }
 
     private var editorFont: Font {
