@@ -119,9 +119,13 @@ The current DMG is good for private testing. Public distribution still needs Dev
 
 ## Acknowledgments
 
-Unspool's writing experience was inspired by Farza's
-[Freewrite](https://github.com/farzaa/freewrite). Thanks to
-[Farza](https://github.com/farzaa) for making it open source.
+Unspool owes a lot to Farza's
+[Freewrite](https://github.com/farzaa/freewrite), an amazing open-source Mac
+writing app. I love Freewrite. Unspool started from that quiet freewriting idea,
+then adds a 750-words-style daily writing mechanic, local Markdown storage,
+and a few simpler privacy-focused choices.
+
+Huge thanks to [Farza](https://github.com/farzaa) for making Freewrite.
 
 ## License
 

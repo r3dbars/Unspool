@@ -23,4 +23,4 @@ First private release of Unspool.
 
 - The DMG is intended for private testing.
 - Public distribution still needs Developer ID signing and notarization.
-- The writing experience was inspired by Farza's MIT-licensed Freewrite project.
+- Unspool owes a lot to Farza's MIT-licensed Freewrite project, which shaped the quiet writing experience.

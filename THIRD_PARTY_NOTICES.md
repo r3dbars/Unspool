@@ -2,12 +2,15 @@
 
 ## freewrite
 
-Unspool's writing experience was inspired by Farza's Freewrite:
+Unspool owes a lot to Farza's Freewrite, an amazing open-source Mac writing app.
+Freewrite shaped the quiet writing experience in Unspool. Unspool adds a
+750-words-style daily writing mechanic, local Markdown storage, and a few
+simpler privacy-focused choices.
 
 - GitHub: [farzaa](https://github.com/farzaa)
 - Project: [farzaa/freewrite](https://github.com/farzaa/freewrite)
 
-Freewrite is MIT licensed.
+Freewrite is MIT licensed. Its copyright notice is included below.
 
 ```text
 MIT License 2025, Farza Majeed
