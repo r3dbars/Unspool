@@ -9,15 +9,18 @@ public struct TodayWritingView: View {
     @State private var bottomBarHovered = false
     @State private var backspaceDisabled = false
     @State private var isFullscreen = false
+    @State private var showingCompletionCelebration = false
+    @State private var completionPulse = false
 
     @AppStorage("writingFontStyle") private var writingFontStyle = "Serif"
     @AppStorage("writingFontSize") private var writingFontSize = 19.0
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
+    @AppStorage("lastCelebratedCompletionDay") private var lastCelebratedCompletionDay = ""
     private let editorHorizontalInset = 18.0
-    private let editorTopInset = 64.0
-    private let editorBottomInset = 44.0
+    private let editorTopInset = 52.0
+    private let editorBottomInset = 52.0
     private let placeholderCaretGap = 7.0
-    private let fadeEdgeHeight = 42.0
+    private let fadeEdgeHeight = 46.0
 
     public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
@@ -30,14 +33,14 @@ public struct TodayWritingView: View {
 
             editorSurface
                 .padding(.horizontal, 34)
-                .padding(.top, 14)
-                .padding(.bottom, 58)
+                .padding(.vertical, 20)
 
             bottomBar
                 .padding(.horizontal, 22)
                 .padding(.bottom, 16)
-                .opacity(bottomBarHovered ? 1 : 0)
+                .opacity(shouldShowBottomBar ? 1 : 0)
                 .animation(.easeInOut(duration: 0.22), value: bottomBarHovered)
+                .animation(.spring(response: 0.34, dampingFraction: 0.78), value: showingCompletionCelebration)
                 .contentShape(Rectangle())
                 .onHover { bottomBarHovered = $0 }
         }
@@ -45,6 +48,9 @@ public struct TodayWritingView: View {
         .background(BackspaceGuardView(isEnabled: backspaceDisabled).frame(width: 0, height: 0))
         .onAppear {
             editorFocused = true
+        }
+        .onChange(of: entryStore.todayEntry.wordCount) { oldValue, newValue in
+            handleWordCountChange(from: oldValue, to: newValue)
         }
         .onReceive(NotificationCenter.default.publisher(for: NSWindow.willEnterFullScreenNotification)) { _ in
             isFullscreen = true
@@ -69,7 +75,6 @@ public struct TodayWritingView: View {
             .padding(.bottom, editorBottomInset)
             .padding(.horizontal, editorHorizontalInset)
             .frame(maxWidth: 720, maxHeight: .infinity)
-            .mask(editorFadeMask)
             .focused($editorFocused)
             .accessibilityLabel("Today's daily page")
 
@@ -81,6 +86,12 @@ public struct TodayWritingView: View {
                     .padding(.leading, editorHorizontalInset + placeholderCaretGap)
                     .padding(.trailing, editorHorizontalInset)
                     .padding(.top, editorTopInset)
+                    .allowsHitTesting(false)
+            }
+
+            if !entryStore.todayEntry.body.isEmpty {
+                editorEdgeFades
+                    .frame(maxWidth: 720, maxHeight: .infinity)
                     .allowsHitTesting(false)
             }
         }
@@ -138,33 +149,70 @@ public struct TodayWritingView: View {
     }
 
     private var compactProgress: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 6) {
-                Text("\(entryStore.todayEntry.wordCount) / 750")
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : .secondary)
+        ZStack(alignment: .leading) {
+            progressSummary
+                .opacity(showingCompletionCelebration ? 0 : 1)
 
-                Text("·")
-                    .foregroundStyle(.tertiary)
-
-                Text("Streak \(entryStore.currentStreak)")
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(.secondary)
-            }
-
-            HStack(spacing: 8) {
-                ProgressView(value: min(Double(entryStore.todayEntry.wordCount) / 750.0, 1.0))
-                    .controlSize(.mini)
-                    .tint(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : MentalCompostColor.mossGreen)
-                    .frame(width: 116)
-
-                Text(entryStore.saveErrorMessage ?? statusMessage(for: entryStore.todayEntry.wordCount))
-                    .font(.caption2)
-                    .foregroundStyle(entryStore.saveErrorMessage == nil ? Color.secondary.opacity(0.65) : Color.red)
-                    .lineLimit(1)
-            }
+            completionSummary
+                .opacity(showingCompletionCelebration ? 1 : 0)
+                .scaleEffect(completionPulse ? 1.03 : 0.98, anchor: .leading)
         }
         .frame(width: 260, alignment: .leading)
+    }
+
+    private var progressSummary: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            progressHeader
+            progressStatus
+        }
+    }
+
+    private var completionSummary: some View {
+        HStack(spacing: 9) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundStyle(MentalCompostColor.sproutGreen)
+                .shadow(color: MentalCompostColor.sproutGreen.opacity(completionPulse ? 0.52 : 0.16), radius: completionPulse ? 8 : 2)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("You unspooled today")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(MentalCompostColor.sproutGreen)
+
+                Text("750 words met")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var progressHeader: some View {
+        HStack(spacing: 6) {
+            Text("\(entryStore.todayEntry.wordCount) / 750")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : .secondary)
+
+            Text("·")
+                .foregroundStyle(.tertiary)
+
+            Text("Streak \(entryStore.currentStreak)")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var progressStatus: some View {
+        HStack(spacing: 8) {
+            ProgressView(value: min(Double(entryStore.todayEntry.wordCount) / 750.0, 1.0))
+                .controlSize(.mini)
+                .tint(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : MentalCompostColor.mossGreen)
+                .frame(width: 116)
+
+            Text(entryStore.saveErrorMessage ?? statusMessage(for: entryStore.todayEntry.wordCount))
+                .font(.caption2)
+                .foregroundStyle(entryStore.saveErrorMessage == nil ? Color.secondary.opacity(0.65) : Color.red)
+                .lineLimit(1)
+        }
     }
 
     private func bottomButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
@@ -180,24 +228,55 @@ public struct TodayWritingView: View {
         .background(Color.primary.opacity(0.001), in: RoundedRectangle(cornerRadius: 6))
     }
 
-    private var editorFadeMask: some View {
+    private var editorEdgeFades: some View {
         VStack(spacing: 0) {
             LinearGradient(
-                colors: [.clear, .black],
+                colors: [ritualBackground, ritualBackground.opacity(0)],
                 startPoint: .top,
                 endPoint: .bottom
             )
             .frame(height: fadeEdgeHeight)
 
-            Rectangle()
-                .fill(.black)
+            Spacer(minLength: 0)
 
             LinearGradient(
-                colors: [.black, .clear],
+                colors: [ritualBackground.opacity(0), ritualBackground],
                 startPoint: .top,
                 endPoint: .bottom
             )
             .frame(height: fadeEdgeHeight)
+        }
+    }
+
+    private var shouldShowBottomBar: Bool {
+        bottomBarHovered || showingCompletionCelebration
+    }
+
+    private func handleWordCountChange(from oldValue: Int, to newValue: Int) {
+        guard oldValue < 750, newValue >= 750 else { return }
+        celebrateCompletionIfNeeded()
+    }
+
+    private func celebrateCompletionIfNeeded() {
+        let day = entryStore.todayEntry.dayString
+        guard lastCelebratedCompletionDay != day else { return }
+        lastCelebratedCompletionDay = day
+
+        withAnimation(.spring(response: 0.32, dampingFraction: 0.72)) {
+            showingCompletionCelebration = true
+            completionPulse = true
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.easeInOut(duration: 0.55)) {
+                completionPulse = false
+            }
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+            withAnimation(.easeInOut(duration: 0.35)) {
+                showingCompletionCelebration = false
+            }
         }
     }
 
