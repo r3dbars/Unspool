@@ -80,8 +80,8 @@ public struct TodayWritingView: View {
                 Text(placeholder)
                     .font(editorFont)
                     .foregroundStyle(.tertiary)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 28)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 20)
                     .allowsHitTesting(false)
             }
         }
