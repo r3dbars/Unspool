@@ -14,14 +14,18 @@ public struct TodayWritingView: View {
     @AppStorage("writingFontStyle") private var writingFontStyle = "Serif"
     @AppStorage("writingFontSize") private var writingFontSize = 19.0
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
+    private let editorHorizontalInset = 18.0
+    private let editorTopInset = 56.0
+    private let editorBottomInset = 20.0
+    private let emptyPromptTopInset = 20.0
 
     private static let placeholders = [
-        "Start anywhere.",
+        "Start anywhere",
         "What keeps circling?",
-        "One honest sentence.",
-        "Unspool the noise.",
-        "Write the thing under the thing.",
-        "Get it out of your head."
+        "One honest sentence",
+        "Unspool the noise",
+        "Write the thing under the thing",
+        "Get it out of your head"
     ]
 
     public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
@@ -70,22 +74,24 @@ public struct TodayWritingView: View {
             .foregroundStyle(editorTextColor)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.never)
-            .padding(.horizontal, 18)
-            .padding(.vertical, 20)
-            .frame(maxWidth: 720)
+            .padding(.top, editorTopInset)
+            .padding(.bottom, editorBottomInset)
+            .padding(.horizontal, editorHorizontalInset)
+            .frame(maxWidth: 720, maxHeight: .infinity)
             .focused($editorFocused)
             .accessibilityLabel("Today's daily page")
 
             if entryStore.todayEntry.body.isEmpty {
                 Text(placeholder)
-                    .font(editorFont)
-                    .foregroundStyle(.tertiary)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 20)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color.secondary.opacity(0.52))
+                    .padding(.horizontal, editorHorizontalInset)
+                    .padding(.top, emptyPromptTopInset)
                     .allowsHitTesting(false)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: 720, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     private var bottomBar: some View {
