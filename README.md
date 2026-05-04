@@ -117,6 +117,14 @@ The current DMG is good for private testing. Public distribution still needs Dev
 - [Release Checklist](docs/release-checklist.md)
 - [Product Principles](docs/product-principles.md)
 
+## Acknowledgments
+
+Farzah helped build a good part of Unspool's writing experience.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
 ## Status
 
 Unspool is early and private for now.
