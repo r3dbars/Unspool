@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.2 - 2026-05-04
+
+Final public-readiness wording pass.
+
+### Changed
+
+- Updated contributing docs to say Unspool is early and open source.
+
 ## v0.1.1 - 2026-05-04
 
 Public-readiness update.
