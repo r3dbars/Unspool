@@ -93,6 +93,14 @@ The DMG is written to:
 dist/Unspool.dmg
 ```
 
+## Download
+
+The first private build is published on GitHub Releases:
+
+[Download Unspool.dmg](https://github.com/r3dbars/Unspool/releases/latest/download/Unspool.dmg)
+
+The current DMG is good for private testing. Public distribution still needs Developer ID signing and notarization.
+
 ## Project Map
 
 - `Sources/Unspool`: macOS app entry point
@@ -111,7 +119,7 @@ dist/Unspool.dmg
 
 ## Status
 
-Unspool is early and private for now. The local DMG builds, but public distribution still needs Developer ID signing and notarization.
+Unspool is early and private for now.
 
 ## Product Rule
 

@@ -24,6 +24,7 @@ swift test
 ## Repo
 
 - `README.md` explains the app simply.
+- `CHANGELOG.md` has the new version.
 - `docs/how-it-works.md`, `docs/privacy.md`, and `docs/development.md` are current.
 - Brand assets live in `Assets/`.
 - GitHub cover image is ready at `Assets/GitHub/unspool-social-preview.png`.
