@@ -178,13 +178,13 @@ public struct TodayWritingView: View {
         HStack(spacing: 9) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(MentalCompostColor.sproutGreen)
-                .shadow(color: MentalCompostColor.sproutGreen.opacity(completionPulse ? 0.52 : 0.16), radius: completionPulse ? 8 : 2)
+                .foregroundStyle(UnspoolColor.sproutGreen)
+                .shadow(color: UnspoolColor.sproutGreen.opacity(completionPulse ? 0.52 : 0.16), radius: completionPulse ? 8 : 2)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("You unspooled today")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(MentalCompostColor.sproutGreen)
+                    .foregroundStyle(UnspoolColor.sproutGreen)
 
                 Text("750 words met")
                     .font(.caption2)
@@ -197,7 +197,7 @@ public struct TodayWritingView: View {
         HStack(spacing: 6) {
             Text("\(entryStore.todayEntry.wordCount) / 750")
                 .font(.caption.monospacedDigit())
-                .foregroundStyle(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : .secondary)
+                .foregroundStyle(entryStore.todayEntry.reachedGoal ? UnspoolColor.sproutGreen : .secondary)
 
             Text("·")
                 .foregroundStyle(.tertiary)
@@ -212,7 +212,7 @@ public struct TodayWritingView: View {
         HStack(spacing: 8) {
             ProgressView(value: min(Double(entryStore.todayEntry.wordCount) / 750.0, 1.0))
                 .controlSize(.mini)
-                .tint(entryStore.todayEntry.reachedGoal ? MentalCompostColor.sproutGreen : MentalCompostColor.mossGreen)
+                .tint(entryStore.todayEntry.reachedGoal ? UnspoolColor.sproutGreen : UnspoolColor.mossGreen)
                 .frame(width: 116)
 
             Text(entryStore.saveErrorMessage ?? statusMessage(for: entryStore.todayEntry.wordCount))
@@ -322,7 +322,7 @@ public struct TodayWritingView: View {
     }
 
     private var ritualBackground: Color {
-        colorScheme == .dark ? MentalCompostColor.charcoalSoil : MentalCompostColor.warmPaper
+        colorScheme == .dark ? UnspoolColor.charcoalSoil : UnspoolColor.warmPaper
     }
 
     private var fontSizeTitle: String {
@@ -367,7 +367,7 @@ public struct TodayWritingView: View {
     }
 }
 
-public enum MentalCompostColor {
+public enum UnspoolColor {
     public static let warmPaper = Color(red: 0.96, green: 0.92, blue: 0.84)
     public static let mossGreen = Color(red: 0.31, green: 0.43, blue: 0.25)
     public static let sproutGreen = Color(red: 0.34, green: 0.58, blue: 0.28)

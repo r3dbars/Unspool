@@ -2,75 +2,72 @@
 
 ![Unspool social preview](Assets/GitHub/unspool-social-preview.png)
 
-Unspool is a private daily writing app for getting thoughts out of your head.
+Unspool is a tiny Mac app for getting thoughts out of your head.
 
-It opens to one quiet page. You write whatever is on your mind. Unspool saves it locally as Markdown.
+Open it. Write whatever is already in your head. When you hit 750 words, Unspool marks the day done and keeps the raw page as local Markdown.
 
-The point is relief first. The signal can come later.
+No account. No feed. No prompts. Just a quiet place to unspool the noise.
 
-## What It Is
+## Why It Exists
 
-Unspool gives you a simple place to dump the noise every day:
+Some thoughts are hard to organize while they are still in your head.
 
-- what you are anxious about
-- what you are working on
-- what keeps coming back
-- what you want
-- what feels stuck
+Unspool is built around the morning-pages / 750-words idea: write before you sort. The first few sentences are usually obvious. Somewhere deeper in the page, the real signal starts to show up.
 
-Those raw pages become useful over time. A second brain can later spot themes and open loops without turning the writing session into a task list.
+The app keeps the writing session simple so you do not turn relief into another productivity system.
 
-## Why 750 Words
+## How It Feels
 
-Unspool is built around a simple freewriting idea: write before you organize.
+1. Open the app.
+2. Start typing into the empty page.
+3. Keep going until the page feels lighter.
+4. Hit 750 words if you want the daily mark.
+5. Come back tomorrow to a fresh page.
 
-Morning pages, 750 words a day, and other brain-dump practices work because they lower the bar. You do not need a plan. You do not need a perfect sentence. You just write what is already in your head until the noise starts to loosen.
-
-The number matters because it is long enough to get past the first obvious thoughts. The privacy matters because the writing can be honest. The lack of prompts matters because the page should not steer you before you know what you actually think.
+If you reopen Unspool later the same day, it brings you back to today's page. If it is a new day, it starts fresh.
 
 ## What It Does
 
-- Opens straight into today's writing page
-- Autosaves local Markdown files
-- Tracks word count, streak, and simple writing stats
-- Celebrates when you reach 750 words
-- Resumes today's page if you reopen the app
-- Starts fresh on a new day
-- Lets you choose where Markdown pages are saved
-- Supports light/dark mode, font size, and font style
-- Can disable delete/backspace for freewriting
-- Stores pages on your Mac, not on a server
+- opens straight into today's writing page
+- saves local Markdown files automatically
+- resumes today's page if you reopen the app
+- starts a fresh page on a new day
+- tracks word count, streak, and simple writing stats
+- celebrates when you reach 750 words
+- lets you choose where Markdown pages are saved
+- supports light/dark mode, font size, and font style
+- can disable delete/backspace for stricter freewriting
 
 ## What It Does Not Do
 
-- No account
-- No cloud sync
-- No analytics
-- No social feed
-- No forced prompts
-- No forced summaries
-- No productivity score
+- no account
+- no cloud sync
+- no analytics
+- no social feed
+- no forced prompts
+- no forced summaries
+- no productivity score
 
-## Local Files
+## Where Your Writing Goes
 
-Unspool stores entries in:
+By default, Unspool stores entries here:
 
 ```text
 ~/Library/Application Support/Unspool/Entries
 ```
 
-You can choose a different folder in Settings. This is useful if you want Unspool pages to land directly in a notes folder, second brain, or Git-backed archive.
+You can choose a different folder in Settings. That makes it easy to save pages directly into a notes folder, second brain, or Git-backed archive.
 
-Each page is a Markdown file with small frontmatter metadata and the raw writing body.
+Each entry is a plain Markdown file with small frontmatter metadata and the raw writing body.
 
-## Build
+## Run It Locally
 
 Requirements:
 
 - macOS 14 or newer
 - Swift 6 toolchain
 
-Run locally:
+Start the app:
 
 ```bash
 ./script/build_and_run.sh
@@ -94,11 +91,25 @@ The DMG is written to:
 dist/Unspool.dmg
 ```
 
-## Brand Assets
+## Project Map
 
-- App icon source: `Assets/Brand/unspool-app-icon-source.png`
-- App icon: `Assets/AppIcon/Unspool.icns`
-- GitHub social preview: `Assets/GitHub/unspool-social-preview.png`
+- `Sources/Unspool`: macOS app entry point
+- `Sources/UnspoolCore`: writing UI, local storage, stats, settings
+- `Tests/UnspoolTests`: unit tests for storage, word count, streaks, and export behavior
+- `Assets`: icon, cover image, and brand assets
+- `docs`: product notes, privacy notes, development guide, and release checklist
+
+## Docs
+
+- [How Unspool Works](docs/how-it-works.md)
+- [Privacy](docs/privacy.md)
+- [Development](docs/development.md)
+- [Release Checklist](docs/release-checklist.md)
+- [Product Principles](docs/product-principles.md)
+
+## Status
+
+Unspool is early and private for now. The local DMG builds, but public distribution still needs Developer ID signing and notarization.
 
 ## Product Rule
 

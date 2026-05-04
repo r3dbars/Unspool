@@ -41,7 +41,7 @@ public struct StatsDashboardView: View {
             Text(value)
                 .font(.system(size: 28, weight: .semibold, design: .rounded))
                 .monospacedDigit()
-                .foregroundStyle(MentalCompostColor.sproutGreen)
+                .foregroundStyle(UnspoolColor.sproutGreen)
 
             Text(label)
                 .font(.caption2.weight(.medium))

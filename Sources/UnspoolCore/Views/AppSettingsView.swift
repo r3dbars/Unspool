@@ -15,7 +15,6 @@ public struct AppSettingsView: View {
         Form {
             Section("Storage") {
                 pathRow("Entries", url: effectiveEntriesDirectory)
-                pathRow("AI context exports", url: effectiveExportDirectory)
 
                 HStack {
                     Button("Choose Entries Folder...") {
@@ -31,56 +30,66 @@ public struct AppSettingsView: View {
                     }
                     .disabled(customEntriesDirectoryPath.isEmpty)
                 }
-
-                HStack {
-                    Button("Choose Export Folder...") {
-                        chooseExportFolder()
-                    }
-
-                    Button("Reveal Exports Folder") {
-                        reveal(effectiveExportDirectory)
-                    }
-
-                    Button("Use Default Export Folder") {
-                        customExportDirectoryPath = ""
-                    }
-                    .disabled(customExportDirectoryPath.isEmpty)
-                }
             }
 
-            Section("Local Model") {
-                Toggle("Use local model for future reviews", isOn: $localAIEnabled)
-
-                Text("Recommended: \(LocalModelDefaults.displayName)")
+            Section("Experimental") {
+                Text("These are optional tools from an earlier reflection prototype. They are not needed for daily writing.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                TextField("Endpoint URL", text: $localAIEndpointURL)
-                    .textFieldStyle(.roundedBorder)
+                DisclosureGroup("AI context export") {
+                    pathRow("Exports", url: effectiveExportDirectory)
 
-                TextField("Model name", text: $localAIModelName)
-                    .textFieldStyle(.roundedBorder)
+                    HStack {
+                        Button("Choose Export Folder...") {
+                            chooseExportFolder()
+                        }
 
-                if !isEndpointLocalhost {
-                    Text("Privacy note: this endpoint is not localhost. Only use it if you trust where your writing is going.")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
+                        Button("Reveal Exports Folder") {
+                            reveal(effectiveExportDirectory)
+                        }
+
+                        Button("Use Default Export Folder") {
+                            customExportDirectoryPath = ""
+                        }
+                        .disabled(customExportDirectoryPath.isEmpty)
+                    }
                 }
 
-                HStack {
-                    Button("Use Recommended MLX Model") {
-                        localAIEndpointURL = LocalModelDefaults.endpointURLString
-                        localAIModelName = LocalModelDefaults.modelName
-                    }
+                DisclosureGroup("Local model") {
+                    Toggle("Use local model for future reviews", isOn: $localAIEnabled)
 
-                    Button("Test Local Model") {
-                        testLocalAI()
-                    }
+                    Text("Recommended: \(LocalModelDefaults.displayName)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
 
-                    if let localAITestMessage {
-                        Text(localAITestMessage)
+                    TextField("Endpoint URL", text: $localAIEndpointURL)
+                        .textFieldStyle(.roundedBorder)
+
+                    TextField("Model name", text: $localAIModelName)
+                        .textFieldStyle(.roundedBorder)
+
+                    if !isEndpointLocalhost {
+                        Text("Privacy note: this endpoint is not localhost. Only use it if you trust where your writing is going.")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.orange)
+                    }
+
+                    HStack {
+                        Button("Use Recommended MLX Model") {
+                            localAIEndpointURL = LocalModelDefaults.endpointURLString
+                            localAIModelName = LocalModelDefaults.modelName
+                        }
+
+                        Button("Test Local Model") {
+                            testLocalAI()
+                        }
+
+                        if let localAITestMessage {
+                            Text(localAITestMessage)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }

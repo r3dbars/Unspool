@@ -13,17 +13,17 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "Unspool",
-            dependencies: ["MentalCompostCore"],
-            path: "Sources/MentalCompost"
+            dependencies: ["UnspoolCore"],
+            path: "Sources/Unspool"
         ),
         .target(
-            name: "MentalCompostCore",
-            path: "Sources/MentalCompostCore"
+            name: "UnspoolCore",
+            path: "Sources/UnspoolCore"
         ),
         .testTarget(
-            name: "MentalCompostTests",
-            dependencies: ["MentalCompostCore"],
-            path: "Tests/MentalCompostTests"
+            name: "UnspoolTests",
+            dependencies: ["UnspoolCore"],
+            path: "Tests/UnspoolTests"
         )
     ]
 )

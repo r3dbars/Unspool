@@ -61,7 +61,7 @@ public struct CompostExportEditor: View {
                     export()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(MentalCompostColor.mossGreen)
+                .tint(UnspoolColor.mossGreen)
                 .disabled(selectedContext.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }

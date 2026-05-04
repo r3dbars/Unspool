@@ -145,7 +145,7 @@ public struct CompostReviewView: View {
                 showingExportEditor = true
             }
             .buttonStyle(.borderedProminent)
-            .tint(MentalCompostColor.mossGreen)
+            .tint(UnspoolColor.mossGreen)
             .disabled(draftMarkdown.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
     }

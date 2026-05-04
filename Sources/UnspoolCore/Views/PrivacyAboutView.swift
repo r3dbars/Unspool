@@ -7,8 +7,8 @@ public struct PrivacyAboutView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Your pages are stored locally on your Mac.")
             Text("Unspool does not create an account, sync to a server, or send analytics.")
-            Text("Local model features only talk to the endpoint you configure.")
-            Text("Nothing becomes AI context unless you export it.")
+            Text("You choose where Markdown pages are saved.")
+            Text("Experimental export features only run when you choose to use them.")
         }
         .font(.callout)
         .foregroundStyle(.secondary)

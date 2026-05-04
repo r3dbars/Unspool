@@ -1,4 +1,4 @@
-import MentalCompostCore
+import UnspoolCore
 import XCTest
 
 final class RedBarsReviewExtractorTests: XCTestCase {
