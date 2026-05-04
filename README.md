@@ -95,11 +95,12 @@ dist/Unspool.dmg
 
 ## Download
 
-The first private build is published on GitHub Releases:
+An early DMG is published on GitHub Releases:
 
 [Download Unspool.dmg](https://github.com/r3dbars/Unspool/releases/latest/download/Unspool.dmg)
 
-The current DMG is good for private testing. Public distribution still needs Developer ID signing and notarization.
+The current DMG is good for local testing. It is not Developer ID signed or
+notarized yet.
 
 ## Project Map
 
@@ -135,7 +136,7 @@ Third-party notices live in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Status
 
-Unspool is early and private for now.
+Unspool is early and open source.
 
 ## Product Rule
 

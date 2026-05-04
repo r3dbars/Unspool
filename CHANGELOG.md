@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.1.1 - 2026-05-04
+
+Public-readiness update.
+
+### Changed
+
+- Added MIT license.
+- Added stronger credit for Farza's Freewrite project.
+- Added third-party notices for Freewrite.
+- Updated public README wording.
+
 ## v0.1.0 - 2026-05-04
 
 First private release of Unspool.
