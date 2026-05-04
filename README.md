@@ -119,11 +119,15 @@ The current DMG is good for private testing. Public distribution still needs Dev
 
 ## Acknowledgments
 
-Farzah helped build a good part of Unspool's writing experience.
+Unspool's writing experience was inspired by Farza's
+[Freewrite](https://github.com/farzaa/freewrite). Thanks to
+[Farza](https://github.com/farzaa) for making it open source.
 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+Third-party notices live in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Status
 

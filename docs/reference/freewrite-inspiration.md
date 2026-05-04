@@ -1,7 +1,10 @@
 # Freewrite Inspiration
 
-Unspool borrowed product inspiration from `farzaa/freewrite`, an MIT-licensed
-native macOS freewriting app:
+Unspool borrowed product inspiration from Farza's
+[`farzaa/freewrite`](https://github.com/farzaa/freewrite), an MIT-licensed
+native macOS freewriting app.
+
+Farza's GitHub: [`farzaa`](https://github.com/farzaa).
 
 - quiet full-window writing mode
 - bottom writing control strip
