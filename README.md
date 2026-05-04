@@ -20,6 +20,14 @@ Unspool gives you a simple place to dump the noise every day:
 
 Those raw pages become useful over time. A second brain can later spot themes and open loops without turning the writing session into a task list.
 
+## Why 750 Words
+
+Unspool is built around a simple freewriting idea: write before you organize.
+
+Morning pages, 750 words a day, and other brain-dump practices work because they lower the bar. You do not need a plan. You do not need a perfect sentence. You just write what is already in your head until the noise starts to loosen.
+
+The number matters because it is long enough to get past the first obvious thoughts. The privacy matters because the writing can be honest. The lack of prompts matters because the page should not steer you before you know what you actually think.
+
 ## What It Does
 
 - Opens straight into today's writing page
@@ -28,6 +36,7 @@ Those raw pages become useful over time. A second brain can later spot themes an
 - Celebrates when you reach 750 words
 - Resumes today's page if you reopen the app
 - Starts fresh on a new day
+- Lets you choose where Markdown pages are saved
 - Supports light/dark mode, font size, and font style
 - Can disable delete/backspace for freewriting
 - Stores pages on your Mac, not on a server
@@ -49,6 +58,8 @@ Unspool stores entries in:
 ```text
 ~/Library/Application Support/Unspool/Entries
 ```
+
+You can choose a different folder in Settings. This is useful if you want Unspool pages to land directly in a notes folder, second brain, or Git-backed archive.
 
 Each page is a Markdown file with small frontmatter metadata and the raw writing body.
 

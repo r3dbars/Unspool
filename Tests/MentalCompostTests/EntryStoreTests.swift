@@ -65,4 +65,28 @@ final class EntryStoreTests: XCTestCase {
         XCTAssertEqual(store.todayEntry.dayString, "2026-05-02")
         XCTAssertEqual(store.previousEntries.map(\.id), [completedEntry.id])
     }
+
+    func testSwitchEntriesDirectoryCarriesExistingMarkdown() throws {
+        let originalDirectory = try temporaryDirectory()
+        let newDirectory = try temporaryDirectory()
+        let today = fixedDate("2026-05-02")
+        let entry = DailyEntry(
+            id: "2026-05-02-080000",
+            date: today,
+            body: "this should follow the folder",
+            createdAt: Date(timeIntervalSince1970: 100)
+        )
+        try MarkdownEntrySerializer.save(
+            entry,
+            to: originalDirectory.appendingPathComponent("\(entry.id).md")
+        )
+
+        let store = EntryStore(entriesDirectory: originalDirectory, today: today)
+        try store.switchEntriesDirectory(to: newDirectory, today: today)
+
+        XCTAssertEqual(store.entriesDirectory.standardizedFileURL, newDirectory.standardizedFileURL)
+        XCTAssertEqual(store.todayEntry.id, entry.id)
+        XCTAssertEqual(store.todayEntry.body, entry.body)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: newDirectory.appendingPathComponent("\(entry.id).md").path))
+    }
 }

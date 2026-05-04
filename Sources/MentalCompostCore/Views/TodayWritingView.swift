@@ -120,7 +120,7 @@ public struct TodayWritingView: View {
             Spacer()
 
             bottomButton("Folder", systemImage: "folder") {
-                NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: EntryStore.defaultEntriesDirectory().path)
+                NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: entryStore.entriesDirectory.path)
             }
             .help("Show local entry folder")
 

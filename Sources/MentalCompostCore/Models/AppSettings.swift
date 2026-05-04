@@ -9,7 +9,7 @@ public struct AppSettings: Equatable, Sendable {
     public var localAIModelName: String
 
     public init(
-        entriesDirectory: URL = EntryStore.defaultEntriesDirectory(),
+        entriesDirectory: URL = EntryStore.preferredEntriesDirectory(),
         compostDirectory: URL = CompostReviewStore.defaultCompostDirectory(),
         contextExportDirectory: URL? = nil,
         localAIEnabled: Bool = false,

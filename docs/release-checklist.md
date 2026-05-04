@@ -18,6 +18,7 @@ swift test
 - Shows the 750-word completion moment once per day.
 - Opens the simple stats popover from the word counter.
 - Saves Markdown locally.
+- Lets the user choose the Markdown entries folder in Settings.
 - Uses the Unspool app icon in the app bundle and DMG.
 
 ## Repo

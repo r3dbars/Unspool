@@ -2,6 +2,7 @@ import AppKit
 import SwiftUI
 
 public struct AppSettingsView: View {
+    @AppStorage(EntryDirectoryPreference.userDefaultsKey) private var customEntriesDirectoryPath = ""
     @AppStorage("customExportDirectoryPath") private var customExportDirectoryPath = ""
     @AppStorage("localAIEnabled") private var localAIEnabled = false
     @AppStorage("localAIEndpointURL") private var localAIEndpointURL = LocalModelDefaults.endpointURLString
@@ -13,27 +14,34 @@ public struct AppSettingsView: View {
     public var body: some View {
         Form {
             Section("Storage") {
-                pathRow("Entries", url: EntryStore.defaultEntriesDirectory())
+                pathRow("Entries", url: effectiveEntriesDirectory)
                 pathRow("AI context exports", url: effectiveExportDirectory)
 
                 HStack {
-                    Button("Reveal Entries Folder in Finder") {
-                        reveal(EntryStore.defaultEntriesDirectory())
+                    Button("Choose Entries Folder...") {
+                        chooseEntriesFolder()
                     }
 
-                    Button("Reveal Exports Folder in Finder") {
-                        reveal(effectiveExportDirectory)
+                    Button("Reveal Entries Folder") {
+                        reveal(effectiveEntriesDirectory)
                     }
+
+                    Button("Use Default Entries Folder") {
+                        setEntriesDirectory(nil)
+                    }
+                    .disabled(customEntriesDirectoryPath.isEmpty)
                 }
-            }
 
-            Section("AI Context Export") {
                 HStack {
                     Button("Choose Export Folder...") {
                         chooseExportFolder()
                     }
 
-                    Button("Use Default") {
+                    Button("Reveal Exports Folder") {
+                        reveal(effectiveExportDirectory)
+                    }
+
+                    Button("Use Default Export Folder") {
                         customExportDirectoryPath = ""
                     }
                     .disabled(customExportDirectoryPath.isEmpty)
@@ -86,6 +94,10 @@ public struct AppSettingsView: View {
         .frame(width: 720)
     }
 
+    private var effectiveEntriesDirectory: URL {
+        EntryDirectoryPreference.preferredDirectory()
+    }
+
     private var effectiveExportDirectory: URL {
         ExportPathResolver(customExportDirectory: customExportDirectory).exportDirectory
     }
@@ -111,16 +123,33 @@ public struct AppSettingsView: View {
         }
     }
 
+    private func chooseEntriesFolder() {
+        chooseFolder(prompt: "Choose") { url in
+            setEntriesDirectory(url)
+        }
+    }
+
     private func chooseExportFolder() {
+        chooseFolder(prompt: "Choose") { url in
+            customExportDirectoryPath = url.path
+        }
+    }
+
+    private func chooseFolder(prompt: String, onChoose: (URL) -> Void) {
         let panel = NSOpenPanel()
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.prompt = "Choose"
+        panel.prompt = prompt
 
         if panel.runModal() == .OK, let url = panel.url {
-            customExportDirectoryPath = url.path
+            onChoose(url)
         }
+    }
+
+    private func setEntriesDirectory(_ url: URL?) {
+        EntryDirectoryPreference.setPreferredDirectory(url)
+        customEntriesDirectoryPath = url?.standardizedFileURL.path ?? ""
     }
 
     private func reveal(_ url: URL) {

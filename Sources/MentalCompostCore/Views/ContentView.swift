@@ -40,6 +40,9 @@ public struct ContentView: View {
                 entryStore.saveTodayNow()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: EntryDirectoryPreference.didChangeNotification)) { _ in
+            switchEntriesDirectory()
+        }
     }
 
     private var preferredColorScheme: ColorScheme? {
@@ -53,6 +56,14 @@ public struct ContentView: View {
     private func toggleHistory() {
         withAnimation(.easeInOut(duration: 0.18)) {
             columnVisibility = columnVisibility == .detailOnly ? .all : .detailOnly
+        }
+    }
+
+    private func switchEntriesDirectory() {
+        do {
+            try entryStore.switchEntriesDirectory(to: EntryDirectoryPreference.preferredDirectory())
+        } catch {
+            entryStore.saveErrorMessage = "Could not switch folder: \(error.localizedDescription)"
         }
     }
 }

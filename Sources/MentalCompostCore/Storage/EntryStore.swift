@@ -5,12 +5,12 @@ import Foundation
 public final class EntryStore: ObservableObject {
     @Published public private(set) var todayEntry: DailyEntry
     @Published public private(set) var entries: [DailyEntry] = []
+    @Published public private(set) var entriesDirectory: URL
     @Published public var saveErrorMessage: String?
 
-    public let entriesDirectory: URL
     private var autosaveWorkItem: DispatchWorkItem?
 
-    public init(entriesDirectory: URL = EntryStore.defaultEntriesDirectory(), today: Date = Date()) {
+    public init(entriesDirectory: URL = EntryDirectoryPreference.preferredDirectory(), today: Date = Date()) {
         self.entriesDirectory = entriesDirectory
         self.todayEntry = DailyEntry(date: today)
         loadAll()
@@ -18,9 +18,11 @@ public final class EntryStore: ObservableObject {
     }
 
     nonisolated public static func defaultEntriesDirectory() -> URL {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Unspool", isDirectory: true)
-            .appendingPathComponent("Entries", isDirectory: true)
+        EntryDirectoryPreference.defaultDirectory()
+    }
+
+    nonisolated public static func preferredEntriesDirectory() -> URL {
+        EntryDirectoryPreference.preferredDirectory()
     }
 
     public var previousEntries: [DailyEntry] {
@@ -80,6 +82,25 @@ public final class EntryStore: ObservableObject {
 
     public func saveTodayNow() {
         save(entry: todayEntry)
+    }
+
+    public func switchEntriesDirectory(to newDirectory: URL, today: Date = Date()) throws {
+        autosaveWorkItem?.cancel()
+        let standardizedDirectory = newDirectory.standardizedFileURL
+        let entriesToCarry = visibleEntries.filter(shouldPersist)
+
+        try FileManager.default.createDirectory(at: standardizedDirectory, withIntermediateDirectories: true)
+
+        for entry in entriesToCarry {
+            let fileURL = standardizedDirectory.appendingPathComponent("\(entry.id).md")
+            try MarkdownEntrySerializer.save(entry, to: fileURL)
+        }
+
+        entriesDirectory = standardizedDirectory
+        saveErrorMessage = nil
+        loadAll()
+        loadToday(today)
+        saveTodayNow()
     }
 
     public func markTodayExported() {
