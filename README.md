@@ -8,6 +8,8 @@ Open it. Write whatever is already in your head. When you hit 750 words, Unspool
 
 No account. No feed. No prompts. Just a quiet place to unspool the noise.
 
+![Unspool app screenshot](Assets/GitHub/unspool-app-screenshot.png)
+
 ## Why It Exists
 
 Some thoughts are hard to organize while they are still in your head.
