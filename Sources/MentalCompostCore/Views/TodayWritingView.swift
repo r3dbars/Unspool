@@ -8,25 +8,15 @@ public struct TodayWritingView: View {
     @FocusState private var editorFocused: Bool
     @State private var bottomBarHovered = false
     @State private var backspaceDisabled = false
-    @State private var placeholder = TodayWritingView.placeholders.randomElement() ?? "Start anywhere."
     @State private var isFullscreen = false
 
     @AppStorage("writingFontStyle") private var writingFontStyle = "Serif"
     @AppStorage("writingFontSize") private var writingFontSize = 19.0
     @AppStorage("ritualColorScheme") private var ritualColorScheme = "system"
     private let editorHorizontalInset = 18.0
-    private let editorTopInset = 56.0
+    private let editorTopInset = 176.0
     private let editorBottomInset = 20.0
-    private let emptyPromptTopInset = 20.0
-
-    private static let placeholders = [
-        "Start anywhere",
-        "What keeps circling?",
-        "One honest sentence",
-        "Unspool the noise",
-        "Write the thing under the thing",
-        "Get it out of your head"
-    ]
+    private let emptyPromptTopInset = 92.0
 
     public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
@@ -82,9 +72,15 @@ public struct TodayWritingView: View {
             .accessibilityLabel("Today's daily page")
 
             if entryStore.todayEntry.body.isEmpty {
-                Text(placeholder)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Color.secondary.opacity(0.52))
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Unspool the noise")
+                        .font(.system(size: 34, weight: .semibold, design: .serif))
+                        .foregroundStyle(emptyPromptTitleColor)
+
+                    Text("Start with whatever is already in your head.")
+                        .font(.system(size: 15, weight: .regular))
+                        .foregroundStyle(Color.secondary.opacity(0.62))
+                }
                     .padding(.horizontal, editorHorizontalInset)
                     .padding(.top, emptyPromptTopInset)
                     .allowsHitTesting(false)
@@ -195,6 +191,10 @@ public struct TodayWritingView: View {
 
     private var editorTextColor: Color {
         Color(nsColor: .labelColor).opacity(0.9)
+    }
+
+    private var emptyPromptTitleColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.42) : Color.black.opacity(0.46)
     }
 
     private var ritualBackground: Color {
