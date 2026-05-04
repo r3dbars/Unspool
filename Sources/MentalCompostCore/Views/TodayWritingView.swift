@@ -39,7 +39,7 @@ public struct TodayWritingView: View {
             bottomBar
                 .padding(.horizontal, 22)
                 .padding(.bottom, 16)
-                .opacity(shouldShowBottomBar ? 1 : 0)
+                .opacity(bottomBarOpacity)
                 .animation(.easeInOut(duration: 0.22), value: bottomBarHovered)
                 .animation(.spring(response: 0.34, dampingFraction: 0.78), value: showingCompletionCelebration)
                 .contentShape(Rectangle())
@@ -268,6 +268,10 @@ public struct TodayWritingView: View {
 
     private var shouldShowBottomBar: Bool {
         bottomBarHovered || showingCompletionCelebration
+    }
+
+    private var bottomBarOpacity: Double {
+        shouldShowBottomBar ? 1 : 0.42
     }
 
     private func handleWordCountChange(from oldValue: Int, to newValue: Int) {

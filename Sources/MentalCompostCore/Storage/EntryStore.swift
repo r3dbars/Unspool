@@ -65,7 +65,7 @@ public final class EntryStore: ObservableObject {
             .filter { $0.dayString == key }
             .sorted { sortEntries($0, before: $1) }
 
-        if let latest = todaysEntries.first, !latest.reachedGoal {
+        if let latest = todaysEntries.first(where: { !$0.body.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) {
             todayEntry = latest
         } else {
             todayEntry = newSessionEntry(for: date)
