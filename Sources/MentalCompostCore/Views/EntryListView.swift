@@ -30,7 +30,7 @@ public struct EntryListView: View {
                 Section("Previous") {
                     ForEach(previousEntries) { entry in
                         entryRow(
-                            title: entry.dayString,
+                            title: title(for: entry),
                             detail: detail(for: entry),
                             reachedGoal: entry.reachedGoal
                         )
@@ -69,5 +69,12 @@ public struct EntryListView: View {
 
     private func detail(for entry: DailyEntry) -> String {
         "\(entry.wordCount) words"
+    }
+
+    private func title(for entry: DailyEntry) -> String {
+        if entry.dayString == todayEntry.dayString {
+            return "Today, \(DateSupport.timeString(for: entry.createdAt))"
+        }
+        return entry.dayString
     }
 }

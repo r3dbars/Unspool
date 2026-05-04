@@ -11,6 +11,7 @@ public struct TodayWritingView: View {
     @State private var isFullscreen = false
     @State private var showingCompletionCelebration = false
     @State private var completionPulse = false
+    @State private var showingStatsDashboard = false
 
     @AppStorage("writingFontStyle") private var writingFontStyle = "Serif"
     @AppStorage("writingFontSize") private var writingFontSize = 19.0
@@ -145,15 +146,25 @@ public struct TodayWritingView: View {
     }
 
     private var compactProgress: some View {
-        ZStack(alignment: .leading) {
-            progressSummary
-                .opacity(showingCompletionCelebration ? 0 : 1)
+        Button {
+            showingStatsDashboard.toggle()
+        } label: {
+            ZStack(alignment: .leading) {
+                progressSummary
+                    .opacity(showingCompletionCelebration ? 0 : 1)
 
-            completionSummary
-                .opacity(showingCompletionCelebration ? 1 : 0)
-                .scaleEffect(completionPulse ? 1.03 : 0.98, anchor: .leading)
+                completionSummary
+                    .opacity(showingCompletionCelebration ? 1 : 0)
+                    .scaleEffect(completionPulse ? 1.03 : 0.98, anchor: .leading)
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 6))
         }
+        .buttonStyle(.plain)
         .frame(width: 260, alignment: .leading)
+        .popover(isPresented: $showingStatsDashboard, arrowEdge: .bottom) {
+            StatsDashboardView(summary: entryStore.statsSummary)
+        }
+        .help("Show writing stats")
     }
 
     private var progressSummary: some View {

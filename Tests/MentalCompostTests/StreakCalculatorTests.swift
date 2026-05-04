@@ -21,6 +21,28 @@ final class StreakCalculatorTests: XCTestCase {
         )
     }
 
+    func testMultipleEntriesOnSameCompletedDayCountAsOneStreakDay() {
+        let today = fixedDate("2026-05-02")
+        let firstToday = completed(today, id: "2026-05-02-080000")
+        let secondToday = completed(today, id: "2026-05-02-090000")
+
+        XCTAssertEqual(
+            StreakCalculator.currentStreak(entries: [firstToday, secondToday], today: today),
+            1
+        )
+    }
+
+    func testBestStreakUsesCompletedDays() {
+        let dayOne = fixedDate("2026-04-29")
+        let dayTwo = fixedDate("2026-04-30")
+        let dayFour = fixedDate("2026-05-02")
+
+        XCTAssertEqual(
+            StreakCalculator.bestStreak(entries: [completed(dayOne), completed(dayTwo), completed(dayFour)]),
+            2
+        )
+    }
+
     func testGapBreaksStreak() {
         let today = fixedDate("2026-05-02")
         let twoDaysAgo = fixedDate("2026-04-30")
@@ -46,7 +68,7 @@ final class StreakCalculatorTests: XCTestCase {
         )
     }
 
-    private func completed(_ date: Date) -> DailyEntry {
-        DailyEntry(date: date, body: Array(repeating: "word", count: 750).joined(separator: " "))
+    private func completed(_ date: Date, id: String? = nil) -> DailyEntry {
+        DailyEntry(id: id, date: date, body: Array(repeating: "word", count: 750).joined(separator: " "))
     }
 }

@@ -15,6 +15,7 @@ final class MarkdownEntrySerializerTests: XCTestCase {
         XCTAssertTrue(markdown.contains("date: 2026-05-02"))
         XCTAssertTrue(markdown.contains("app: Unspool"))
         XCTAssertTrue(markdown.contains("type: daily-entry"))
+        XCTAssertTrue(markdown.contains("id: 2026-05-02"))
         XCTAssertTrue(markdown.contains("wordCount: 9"))
         XCTAssertTrue(markdown.contains("reachedGoal: false"))
         XCTAssertTrue(markdown.contains("# Unspool — 2026-05-02"))
@@ -31,8 +32,24 @@ final class MarkdownEntrySerializerTests: XCTestCase {
         let loaded = try MarkdownEntrySerializer.load(from: fileURL)
 
         XCTAssertEqual(loaded.dayString, "2026-05-02")
+        XCTAssertEqual(loaded.id, "2026-05-02")
         XCTAssertEqual(loaded.body, body)
         XCTAssertEqual(loaded.wordCount, WordCounter.count(body))
+    }
+
+    func testEntryRoundTripPreservesSessionID() throws {
+        let directory = try temporaryDirectory()
+        let fileURL = directory.appendingPathComponent("2026-05-02-083000.md")
+        let entry = DailyEntry(
+            id: "2026-05-02-083000",
+            date: fixedDate("2026-05-02"),
+            body: "A small session"
+        )
+
+        try MarkdownEntrySerializer.save(entry, to: fileURL)
+        let loaded = try MarkdownEntrySerializer.load(from: fileURL)
+
+        XCTAssertEqual(loaded.id, "2026-05-02-083000")
     }
 
     func testEntrySerializesAndLoadsInsightFrontmatter() throws {

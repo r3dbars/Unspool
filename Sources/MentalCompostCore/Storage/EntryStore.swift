@@ -25,12 +25,16 @@ public final class EntryStore: ObservableObject {
 
     public var previousEntries: [DailyEntry] {
         entries
-            .filter { $0.dayString != todayEntry.dayString }
-            .sorted { $0.date > $1.date }
+            .filter { $0.id != todayEntry.id }
+            .sorted { sortEntries($0, before: $1) }
     }
 
     public var currentStreak: Int {
         StreakCalculator.currentStreak(entries: visibleEntries, today: todayEntry.date)
+    }
+
+    public var statsSummary: EntryStatsSummary {
+        EntryStatsSummary(entries: visibleEntries, today: todayEntry.date)
     }
 
     public var visibleEntries: [DailyEntry] {
@@ -49,7 +53,7 @@ public final class EntryStore: ObservableObject {
             entries = urls
                 .filter { $0.pathExtension == "md" }
                 .compactMap { try? MarkdownEntrySerializer.load(from: $0) }
-                .sorted { $0.date > $1.date }
+                .sorted { sortEntries($0, before: $1) }
         } catch {
             saveErrorMessage = "Could not load entries: \(error.localizedDescription)"
         }
@@ -57,10 +61,14 @@ public final class EntryStore: ObservableObject {
 
     public func loadToday(_ date: Date = Date()) {
         let key = DateSupport.dayString(for: date)
-        if let existing = entries.first(where: { $0.dayString == key }) {
-            todayEntry = existing
+        let todaysEntries = entries
+            .filter { $0.dayString == key }
+            .sorted { sortEntries($0, before: $1) }
+
+        if let latest = todaysEntries.first, !latest.reachedGoal {
+            todayEntry = latest
         } else {
-            todayEntry = DailyEntry(date: date)
+            todayEntry = newSessionEntry(for: date)
         }
     }
 
@@ -123,7 +131,7 @@ public final class EntryStore: ObservableObject {
     }
 
     public func fileURL(for entry: DailyEntry) -> URL {
-        entriesDirectory.appendingPathComponent("\(entry.dayString).md")
+        entriesDirectory.appendingPathComponent("\(entry.id).md")
     }
 
     private func shouldPersist(_ entry: DailyEntry) -> Bool {
@@ -146,6 +154,26 @@ public final class EntryStore: ObservableObject {
     private func upsert(_ entry: DailyEntry) {
         entries.removeAll { $0.id == entry.id }
         entries.append(entry)
-        entries.sort { $0.date > $1.date }
+        entries.sort { sortEntries($0, before: $1) }
+    }
+
+    private func newSessionEntry(for date: Date, now: Date = Date()) -> DailyEntry {
+        let sessionID = uniqueSessionID(forEntryDate: date, createdAt: now)
+        return DailyEntry(id: sessionID, date: date, createdAt: now, updatedAt: now)
+    }
+
+    private func uniqueSessionID(forEntryDate entryDate: Date, createdAt: Date) -> String {
+        let baseID = DateSupport.sessionID(forEntryDate: entryDate, createdAt: createdAt)
+        guard entries.contains(where: { $0.id == baseID }) else {
+            return baseID
+        }
+        return "\(baseID)-\(UUID().uuidString.prefix(6))"
+    }
+
+    private func sortEntries(_ lhs: DailyEntry, before rhs: DailyEntry) -> Bool {
+        if lhs.date != rhs.date {
+            return lhs.date > rhs.date
+        }
+        return lhs.createdAt > rhs.createdAt
     }
 }

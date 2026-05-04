@@ -6,6 +6,7 @@ public enum MarkdownEntrySerializer {
             "---",
             "app: Unspool",
             "type: daily-entry",
+            "id: \(escapedMetadataValue(entry.id))",
             "date: \(entry.dayString)",
             "wordCount: \(entry.wordCount)",
             "reachedGoal: \(entry.reachedGoal)",
@@ -71,6 +72,7 @@ public enum MarkdownEntrySerializer {
         let body = parseBody(String(markdown[frontmatterEnd.upperBound...]))
 
         return DailyEntry(
+            id: metadata["id"],
             date: day,
             body: body,
             createdAt: createdAt,
