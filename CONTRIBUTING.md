@@ -1,6 +1,6 @@
 # Contributing
 
-Unspool is private and early right now.
+Unspool is early and open source.
 
 The main rule is simple:
 
