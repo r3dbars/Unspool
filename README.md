@@ -1,14 +1,14 @@
 # Unspool
 
+![Unspool social preview](Assets/GitHub/unspool-social-preview.png)
+
 Unspool is a private daily writing app for getting thoughts out of your head.
 
-It opens to one quiet page. You write whatever is on your mind. Unspool saves it locally as Markdown so it can stay private, become part of a second brain, or feed a later reflection system.
+It opens to one quiet page. You write whatever is on your mind. Unspool saves it locally as Markdown.
 
-The point is relief first. Pattern-finding can come later.
+The point is relief first. The signal can come later.
 
-## Why This Exists
-
-Some thoughts are too tangled to organize while they are still in your head.
+## What It Is
 
 Unspool gives you a simple place to dump the noise every day:
 
@@ -18,17 +18,18 @@ Unspool gives you a simple place to dump the noise every day:
 - what you want
 - what feels stuck
 
-Those raw pages become useful signal over time. A second brain can later see themes, pressure points, goals, and open loops without forcing the writing session to become a task list.
+Those raw pages become useful over time. A second brain can later spot themes and open loops without turning the writing session into a task list.
 
 ## What It Does
 
 - Opens straight into today's writing page
 - Autosaves local Markdown files
-- Tracks word count and writing streak
-- Supports light/dark writing modes
-- Supports serif, system, and monospace writing fonts
+- Tracks word count, streak, and simple writing stats
+- Celebrates when you reach 750 words
+- Resumes today's page if you reopen the app
+- Starts fresh on a new day
+- Supports light/dark mode, font size, and font style
 - Can disable delete/backspace for freewriting
-- Keeps previous pages in a local sidebar
 - Stores pages on your Mac, not on a server
 
 ## What It Does Not Do
@@ -51,26 +52,14 @@ Unspool stores entries in:
 
 Each page is a Markdown file with small frontmatter metadata and the raw writing body.
 
-## Second-Brain Shape
-
-Unspool is designed to work well with a local second brain.
-
-The best flow is:
-
-1. Write freely in Unspool.
-2. Keep the raw page intact.
-3. Let a separate system process patterns later.
-
-That keeps the daily writing ritual simple while still giving agents useful context over time.
-
-## Run Locally
+## Build
 
 Requirements:
 
 - macOS 14 or newer
 - Swift 6 toolchain
 
-Run the app:
+Run locally:
 
 ```bash
 ./script/build_and_run.sh
@@ -82,17 +71,26 @@ Run tests:
 swift test
 ```
 
-Verify the app bundle launches:
+Build a local DMG:
 
 ```bash
-./script/build_and_run.sh --verify
+./script/package_dmg.sh
 ```
 
-## Product Direction
+The DMG is written to:
 
-The core rule is simple:
+```text
+dist/Unspool.dmg
+```
 
-> Write it out. Keep the signal.
+## Brand Assets
 
-Future work should protect that. Unspool should stay quiet, local, and focused on the page.
+- App icon source: `Assets/Brand/unspool-app-icon-source.png`
+- App icon: `Assets/AppIcon/Unspool.icns`
+- GitHub social preview: `Assets/GitHub/unspool-social-preview.png`
 
+## Product Rule
+
+Write it out. Keep the signal.
+
+Unspool should stay quiet, local, and focused on the page.
