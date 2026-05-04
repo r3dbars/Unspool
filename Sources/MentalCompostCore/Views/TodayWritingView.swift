@@ -20,7 +20,7 @@ public struct TodayWritingView: View {
     private let editorTopInset = 52.0
     private let editorBottomInset = 52.0
     private let placeholderCaretGap = 7.0
-    private let fadeEdgeHeight = 118.0
+    private let fadeEdgeHeight = 56.0
 
     public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
@@ -89,13 +89,9 @@ public struct TodayWritingView: View {
                     .allowsHitTesting(false)
             }
 
-            if !entryStore.todayEntry.body.isEmpty {
-                editorEdgeFades
-                    .frame(maxWidth: 720, maxHeight: .infinity)
-                    .allowsHitTesting(false)
-            }
         }
         .frame(maxWidth: 720, maxHeight: .infinity)
+        .mask(editorAlphaFadeMask)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
@@ -228,14 +224,14 @@ public struct TodayWritingView: View {
         .background(Color.primary.opacity(0.001), in: RoundedRectangle(cornerRadius: 6))
     }
 
-    private var editorEdgeFades: some View {
+    private var editorAlphaFadeMask: some View {
         VStack(spacing: 0) {
             LinearGradient(
                 stops: [
-                    .init(color: ritualBackground, location: 0.0),
-                    .init(color: ritualBackground, location: 0.24),
-                    .init(color: ritualBackground.opacity(0.74), location: 0.48),
-                    .init(color: ritualBackground.opacity(0), location: 1.0)
+                    .init(color: .clear, location: 0.0),
+                    .init(color: .black.opacity(0.24), location: 0.18),
+                    .init(color: .black.opacity(0.82), location: 0.56),
+                    .init(color: .black, location: 1.0)
                 ],
                 startPoint: .top,
                 endPoint: .bottom
@@ -246,10 +242,10 @@ public struct TodayWritingView: View {
 
             LinearGradient(
                 stops: [
-                    .init(color: ritualBackground.opacity(0), location: 0.0),
-                    .init(color: ritualBackground.opacity(0.74), location: 0.52),
-                    .init(color: ritualBackground, location: 0.76),
-                    .init(color: ritualBackground, location: 1.0)
+                    .init(color: .black, location: 0.0),
+                    .init(color: .black.opacity(0.82), location: 0.44),
+                    .init(color: .black.opacity(0.24), location: 0.82),
+                    .init(color: .clear, location: 1.0)
                 ],
                 startPoint: .top,
                 endPoint: .bottom
