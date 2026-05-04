@@ -238,7 +238,8 @@ public struct TodayWritingView: View {
             )
             .frame(height: fadeEdgeHeight)
 
-            Spacer(minLength: 0)
+            Rectangle()
+                .fill(.black)
 
             LinearGradient(
                 stops: [
