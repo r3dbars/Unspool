@@ -20,7 +20,7 @@ public struct TodayWritingView: View {
     private let editorTopInset = 52.0
     private let editorBottomInset = 52.0
     private let placeholderCaretGap = 7.0
-    private let fadeEdgeHeight = 46.0
+    private let fadeEdgeHeight = 118.0
 
     public init(entryStore: EntryStore, onToggleHistory: @escaping () -> Void = {}) {
         self.entryStore = entryStore
@@ -231,7 +231,12 @@ public struct TodayWritingView: View {
     private var editorEdgeFades: some View {
         VStack(spacing: 0) {
             LinearGradient(
-                colors: [ritualBackground, ritualBackground.opacity(0)],
+                stops: [
+                    .init(color: ritualBackground, location: 0.0),
+                    .init(color: ritualBackground, location: 0.24),
+                    .init(color: ritualBackground.opacity(0.74), location: 0.48),
+                    .init(color: ritualBackground.opacity(0), location: 1.0)
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -240,7 +245,12 @@ public struct TodayWritingView: View {
             Spacer(minLength: 0)
 
             LinearGradient(
-                colors: [ritualBackground.opacity(0), ritualBackground],
+                stops: [
+                    .init(color: ritualBackground.opacity(0), location: 0.0),
+                    .init(color: ritualBackground.opacity(0.74), location: 0.52),
+                    .init(color: ritualBackground, location: 0.76),
+                    .init(color: ritualBackground, location: 1.0)
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
