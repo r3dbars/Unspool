@@ -95,12 +95,11 @@ dist/Unspool.dmg
 
 ## Download
 
-An early DMG is published on GitHub Releases:
+An early signed and notarized DMG is published on GitHub Releases:
 
 [Download Unspool.dmg](https://github.com/r3dbars/Unspool/releases/latest/download/Unspool.dmg)
 
-The current DMG is good for local testing. It is not Developer ID signed or
-notarized yet.
+The current DMG is Developer ID signed and notarized for macOS.
 
 ## Project Map
 

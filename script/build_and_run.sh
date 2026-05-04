@@ -5,6 +5,8 @@ MODE="${1:-run}"
 APP_NAME="Unspool"
 BUNDLE_ID="com.redbars.Unspool"
 MIN_SYSTEM_VERSION="14.0"
+SIGN_IDENTITY="${SIGN_IDENTITY:--}"
+SWIFT_CONFIGURATION="${SWIFT_CONFIGURATION:-debug}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
@@ -19,8 +21,12 @@ ICON_SOURCE="$ROOT_DIR/Assets/AppIcon/Unspool.icns"
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 
 cd "$ROOT_DIR"
-swift build
-BUILD_BINARY="$(swift build --show-bin-path)/$APP_NAME"
+APP_VERSION="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
+APP_VERSION="${UNSPOOL_VERSION:-${APP_VERSION:-0.1.0}}"
+BUILD_NUMBER="$(git rev-list --count HEAD 2>/dev/null || echo 1)"
+
+swift build -c "$SWIFT_CONFIGURATION"
+BUILD_BINARY="$(swift build -c "$SWIFT_CONFIGURATION" --show-bin-path)/$APP_NAME"
 
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES"
@@ -41,6 +47,10 @@ cat >"$INFO_PLIST" <<PLIST
   <string>Unspool</string>
   <key>CFBundleDisplayName</key>
   <string>Unspool</string>
+  <key>CFBundleShortVersionString</key>
+  <string>$APP_VERSION</string>
+  <key>CFBundleVersion</key>
+  <string>$BUILD_NUMBER</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleIconFile</key>
@@ -54,7 +64,11 @@ cat >"$INFO_PLIST" <<PLIST
 PLIST
 
 if command -v codesign >/dev/null 2>&1; then
-  codesign --force --deep --sign - "$APP_BUNDLE" >/dev/null
+  if [[ "$SIGN_IDENTITY" == "-" ]]; then
+    codesign --force --deep --sign - "$APP_BUNDLE" >/dev/null
+  else
+    codesign --force --deep --options runtime --timestamp --sign "$SIGN_IDENTITY" "$APP_BUNDLE" >/dev/null
+  fi
 fi
 
 open_app() {

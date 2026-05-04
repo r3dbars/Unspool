@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.3 - 2026-05-04
+
+Signed and notarized public build.
+
+### Changed
+
+- Updated packaging to use Developer ID signing with hardened runtime.
+- Added DMG signing, notarization, stapling, and Gatekeeper validation.
+- Updated README download wording for the notarized DMG.
+
 ## v0.1.2 - 2026-05-04
 
 Final public-readiness wording pass.
