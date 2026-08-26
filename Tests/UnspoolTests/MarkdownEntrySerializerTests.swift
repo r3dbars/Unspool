@@ -52,7 +52,7 @@ final class MarkdownEntrySerializerTests: XCTestCase {
         XCTAssertEqual(loaded.id, "2026-05-02-083000")
     }
 
-    func testEntrySerializesAndLoadsInsightFrontmatter() throws {
+    func testLegacyInsightFrontmatterStillLoads() throws {
         let reviewedAt = Date(timeIntervalSince1970: 300)
         let entry = DailyEntry(
             date: fixedDate("2026-05-02"),
@@ -73,5 +73,86 @@ final class MarkdownEntrySerializerTests: XCTestCase {
         XCTAssertEqual(loaded.insightSummary?.bottleneck, "Unclear demo")
         XCTAssertEqual(loaded.insightSummary?.nextRedBar, "Show the rough version")
         XCTAssertEqual(loaded.insightSummary?.greenBarSignal, "One user asks for it again")
+    }
+
+    func testDuplicateFrontmatterKeysLastWins() throws {
+        let markdown = """
+        ---
+        app: Unspool
+        type: daily-entry
+        id: 2026-05-01
+        id: 2026-05-02
+        date: 2026-05-01
+        date: 2026-05-02
+        wordCount: 1
+        reachedGoal: false
+        createdAt: 1970-01-01T00:01:40Z
+        updatedAt: 1970-01-01T00:03:20Z
+        ---
+
+        # Unspool — 2026-05-02
+
+        hello
+        """
+
+        let loaded = try MarkdownEntrySerializer.entry(from: markdown)
+
+        XCTAssertEqual(loaded.id, "2026-05-02")
+        XCTAssertEqual(loaded.dayString, "2026-05-02")
+        XCTAssertEqual(loaded.body, "hello")
+    }
+
+    func testMalformedFrontmatterLineIsIgnored() throws {
+        let markdown = """
+        ---
+        app: Unspool
+        this line is not a key value pair
+        : missing-key
+        type: daily-entry
+        id: 2026-05-02
+        date: 2026-05-02
+        wordCount: 1
+        reachedGoal: false
+        createdAt: 1970-01-01T00:01:40Z
+        updatedAt: 1970-01-01T00:03:20Z
+        ---
+
+        # Unspool — 2026-05-02
+
+        hello
+        """
+
+        let loaded = try MarkdownEntrySerializer.entry(from: markdown)
+
+        XCTAssertEqual(loaded.id, "2026-05-02")
+        XCTAssertEqual(loaded.dayString, "2026-05-02")
+        XCTAssertEqual(loaded.body, "hello")
+    }
+
+    func testBodyThematicBreakDoesNotCrash() throws {
+        let markdown = """
+        ---
+        app: Unspool
+        type: daily-entry
+        id: 2026-05-02
+        date: 2026-05-02
+        wordCount: 3
+        reachedGoal: false
+        createdAt: 1970-01-01T00:01:40Z
+        updatedAt: 1970-01-01T00:03:20Z
+        ---
+
+        # Unspool — 2026-05-02
+
+        before
+        ---
+        after
+        """
+
+        let loaded = try MarkdownEntrySerializer.entry(from: markdown)
+
+        XCTAssertTrue(loaded.body.contains("before"))
+        XCTAssertTrue(loaded.body.contains("---"))
+        XCTAssertTrue(loaded.body.contains("after"))
     }
 }

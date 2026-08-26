@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.4 - 2026-08-26
+
+Removed prototype AI/compost from the shipping target.
+
+### Removed
+
+- Removed compiled compost review, local-model, and experimental export code from `UnspoolCore`.
+- Removed tests that only locked that dead prototype behavior.
+
+### Changed
+
+- Frontmatter parsing now last-key-wins and ignores malformed lines so old `.md` files stay loadable.
+- Added GitHub Actions CI for `swift test` and `./script/build_and_run.sh --verify`.
+- Packaging no longer defaults `NOTARY_PROFILE` to another product.
+
 ## v0.1.3 - 2026-05-04
 
 Signed and notarized public build.

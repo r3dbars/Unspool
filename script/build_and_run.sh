@@ -21,7 +21,7 @@ ICON_SOURCE="$ROOT_DIR/Assets/AppIcon/Unspool.icns"
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 
 cd "$ROOT_DIR"
-APP_VERSION="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
+APP_VERSION="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || true)"
 APP_VERSION="${UNSPOOL_VERSION:-${APP_VERSION:-0.1.0}}"
 BUILD_NUMBER="$(git rev-list --count HEAD 2>/dev/null || echo 1)"
 
@@ -91,9 +91,15 @@ case "$MODE" in
     /usr/bin/log stream --info --style compact --predicate "subsystem == \"$BUNDLE_ID\""
     ;;
   --verify|verify)
-    open_app
-    sleep 1
-    pgrep -x "$APP_NAME" >/dev/null
+    test -x "$APP_BINARY"
+    /usr/bin/file "$APP_BINARY" | grep -q 'Mach-O'
+    if [[ -n "${CI:-}" ]]; then
+      echo "verified $APP_BUNDLE (headless CI; skipped launch)"
+    else
+      open_app
+      sleep 1
+      pgrep -x "$APP_NAME" >/dev/null
+    fi
     ;;
   *)
     echo "usage: $0 [run|--debug|--logs|--telemetry|--verify]" >&2

@@ -1,5 +1,7 @@
 # Unspool
 
+[![CI](https://github.com/r3dbars/Unspool/actions/workflows/ci.yml/badge.svg)](https://github.com/r3dbars/Unspool/actions/workflows/ci.yml)
+
 ![Unspool social preview](Assets/GitHub/unspool-social-preview.png)
 
 Unspool is a tiny Mac app for getting thoughts out of your head.
@@ -9,6 +11,8 @@ Open it. Write whatever is already in your head. When you hit 750 words, Unspool
 No account. No feed. No prompts. Just a quiet place to unspool the noise.
 
 ![Unspool writing demo](Assets/GitHub/unspool-writing-demo.gif)
+
+![Unspool app screenshot](Assets/GitHub/unspool-app-screenshot.png)
 
 ## Why It Exists
 
@@ -105,7 +109,7 @@ The current DMG is Developer ID signed and notarized for macOS.
 
 - `Sources/Unspool`: macOS app entry point
 - `Sources/UnspoolCore`: writing UI, local storage, stats, settings
-- `Tests/UnspoolTests`: unit tests for storage, word count, streaks, and export behavior
+- `Tests/UnspoolTests`: unit tests for storage, word count, and streaks
 - `Assets`: icon, cover image, and brand assets
 - `docs`: product notes, privacy notes, development guide, and release checklist
 
