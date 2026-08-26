@@ -19,7 +19,7 @@ Unspool is a SwiftPM macOS app.
 swift test
 ```
 
-CI on `macos-14` runs the same `swift test` command, then `./script/build_and_run.sh --verify`.
+CI on `macos-15` runs the same `swift test` command, then `./script/build_and_run.sh --verify`.
 
 ## Verify Launch
 
