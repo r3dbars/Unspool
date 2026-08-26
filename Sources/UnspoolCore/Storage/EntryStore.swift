@@ -26,7 +26,7 @@ public final class EntryStore: ObservableObject {
     }
 
     public var previousEntries: [DailyEntry] {
-        entries
+        uniqueEntriesByID
             .filter { $0.id != todayEntry.id }
             .sorted { sortEntries($0, before: $1) }
     }
@@ -40,12 +40,23 @@ public final class EntryStore: ObservableObject {
     }
 
     public var visibleEntries: [DailyEntry] {
-        var byID: [String: DailyEntry] = [:]
-        for entry in entries {
-            byID[entry.id] = entry
-        }
+        var byID = uniqueEntriesByIDKeyed
         byID[todayEntry.id] = todayEntry
         return Array(byID.values)
+    }
+
+    private var uniqueEntriesByID: [DailyEntry] {
+        Array(uniqueEntriesByIDKeyed.values)
+    }
+
+    /// Newest `createdAt` wins when two files share an id. `entries` is newest-first,
+    /// so walk oldest-first and overwrite.
+    private var uniqueEntriesByIDKeyed: [String: DailyEntry] {
+        var byID: [String: DailyEntry] = [:]
+        for entry in entries.reversed() {
+            byID[entry.id] = entry
+        }
+        return byID
     }
 
     public func loadAll() {
