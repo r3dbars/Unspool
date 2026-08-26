@@ -40,7 +40,10 @@ public final class EntryStore: ObservableObject {
     }
 
     public var visibleEntries: [DailyEntry] {
-        var byID = Dictionary(uniqueKeysWithValues: entries.map { ($0.id, $0) })
+        var byID: [String: DailyEntry] = [:]
+        for entry in entries {
+            byID[entry.id] = entry
+        }
         byID[todayEntry.id] = todayEntry
         return Array(byID.values)
     }
@@ -81,6 +84,8 @@ public final class EntryStore: ObservableObject {
     }
 
     public func saveTodayNow() {
+        autosaveWorkItem?.cancel()
+        autosaveWorkItem = nil
         save(entry: todayEntry)
     }
 
@@ -127,10 +132,10 @@ public final class EntryStore: ObservableObject {
 
     private func scheduleAutosave() {
         autosaveWorkItem?.cancel()
-        let entryToSave = todayEntry
         let workItem = DispatchWorkItem { [weak self] in
             Task { @MainActor in
-                self?.save(entry: entryToSave)
+                guard let self else { return }
+                self.save(entry: self.todayEntry)
             }
         }
         autosaveWorkItem = workItem
