@@ -111,4 +111,28 @@ final class EntryStoreTests: XCTestCase {
         let store = EntryStore(entriesDirectory: directory, today: today)
         XCTAssertEqual(Set(store.visibleEntries.map(\.id)).count, store.visibleEntries.count)
     }
+
+    func testPastDayDuplicateIDsKeepNewestAndDoNotCrashPreviousEntries() throws {
+        let directory = try temporaryDirectory()
+        let today = fixedDate("2026-05-02")
+        let yesterday = fixedDate("2026-05-01")
+        let older = DailyEntry(
+            id: "2026-05-01-080000",
+            date: yesterday,
+            body: Array(repeating: "word", count: 750).joined(separator: " "),
+            createdAt: Date(timeIntervalSince1970: 100)
+        )
+        let newer = DailyEntry(
+            id: "2026-05-01-080000",
+            date: yesterday,
+            body: Array(repeating: "later", count: 750).joined(separator: " "),
+            createdAt: Date(timeIntervalSince1970: 200)
+        )
+        try MarkdownEntrySerializer.save(older, to: directory.appendingPathComponent("2026-05-01-080000.md"))
+        try MarkdownEntrySerializer.save(newer, to: directory.appendingPathComponent("2026-05-01-080000-copy.md"))
+
+        let store = EntryStore(entriesDirectory: directory, today: today)
+        XCTAssertEqual(store.previousEntries.map(\.id), [newer.id])
+        XCTAssertEqual(store.previousEntries.first?.body, newer.body)
+    }
 }
