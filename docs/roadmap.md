@@ -9,12 +9,15 @@ Unspool should stay small.
 - make folder selection simple
 - keep the 750-word moment quiet but meaningful
 
+## Shipped
+
+- signed and notarized public DMG in v0.1.3
+
 ## Next
 
 - polish first-run empty state
 - improve history browsing
 - make stats useful without becoming a dashboard
-- add signed and notarized distribution when ready
 
 ## Later
 

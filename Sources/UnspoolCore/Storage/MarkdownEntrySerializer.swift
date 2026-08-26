@@ -100,12 +100,18 @@ public enum MarkdownEntrySerializer {
     }
 
     private static func parseMetadata(_ frontmatter: String) -> [String: String] {
-        Dictionary(uniqueKeysWithValues: frontmatter.split(separator: "\n").compactMap { line in
-            guard let separator = line.firstIndex(of: ":") else { return nil }
-            let key = String(line[..<separator]).trimmingCharacters(in: .whitespaces)
-            let value = String(line[line.index(after: separator)...]).trimmingCharacters(in: .whitespaces)
-            return (key, unescapedMetadataValue(value))
-        })
+        var metadata: [String: String] = [:]
+        for line in frontmatter.split(whereSeparator: \.isNewline) {
+            let trimmedLine = line.trimmingCharacters(in: .whitespaces)
+            guard !trimmedLine.isEmpty else { continue }
+            guard let separator = trimmedLine.firstIndex(of: ":") else { continue }
+            let key = String(trimmedLine[..<separator]).trimmingCharacters(in: .whitespaces)
+            guard !key.isEmpty else { continue }
+            let value = String(trimmedLine[trimmedLine.index(after: separator)...])
+                .trimmingCharacters(in: .whitespaces)
+            metadata[key] = unescapedMetadataValue(value)
+        }
+        return metadata
     }
 
     private static func parseBody(_ contentAfterFrontmatter: String) -> String {

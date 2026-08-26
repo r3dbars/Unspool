@@ -19,16 +19,20 @@ Unspool is a SwiftPM macOS app.
 swift test
 ```
 
+CI on `macos-14` runs the same `swift test` command, then `./script/build_and_run.sh --verify`.
+
 ## Verify Launch
 
 ```bash
 ./script/build_and_run.sh --verify
 ```
 
-## Build A Local DMG
+## Build A Signed DMG
+
+v0.1.3 is already Developer ID signed and notarized. Use the packaging script for later signed releases:
 
 ```bash
-./script/package_dmg.sh
+NOTARY_PROFILE=your-notary-profile ./script/package_dmg.sh
 ```
 
 The DMG is written to:
@@ -37,12 +41,12 @@ The DMG is written to:
 dist/Unspool.dmg
 ```
 
-The local DMG is ad-hoc signed for local validation. Public distribution still needs Developer ID signing and notarization.
+`NOTARY_PROFILE` must be set to your notarytool keychain profile when notarizing. The script fails if it is unset. Do not default it to another product's profile.
 
 ## Source Layout
 
 - `Sources/Unspool`: app entry point
 - `Sources/UnspoolCore`: reusable app logic and SwiftUI views
-- `Tests/UnspoolTests`: storage, streak, word count, and export tests
+- `Tests/UnspoolTests`: storage, streak, and word count tests
 - `script`: local run and packaging scripts
-- `Assets`: app icon and GitHub cover image
+- `Assets`: app icon, README GIF, social preview PNG, and app screenshot
