@@ -22,7 +22,5 @@ Unspool should stay small.
 ## Later
 
 - optional prompts
-- optional export flows
-- optional local-only reflection
 
-Anything optional should stay out of the way of the daily page.
+Anything optional should stay out of the way of the daily page. Prototype reflection/AI code was removed from the shipping target in v0.1.4 and kept on `archive/compost-prototype`.

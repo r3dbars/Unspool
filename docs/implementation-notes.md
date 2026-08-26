@@ -24,23 +24,15 @@ Unspool is a SwiftPM macOS app.
 - Open directly to today's page with a focused editor.
 - Show live word count, daily goal, status copy, and streak.
 - Use a native sidebar/detail layout for previous entries.
-- Keep reflection and export surfaces out of the primary writing flow until they are clearly useful.
 - Add simple Settings with storage paths and privacy copy.
 - Include clear privacy copy in Settings.
-
-## Experimental Reflection Code
-
-The repo still includes local-only reflection/export code from an earlier prototype.
-
-That code is grouped as optional plumbing. It should not interrupt the daily writing page, and it should not send writing anywhere unless the user explicitly chooses an export or endpoint.
 
 ## Tests
 
 - Word count edge cases.
-- Markdown serialize/save/load round trip.
+- Markdown serialize/save/load round trip, including duplicate frontmatter keys.
 - Streak calculation.
 - Folder switching.
-- Experimental local reflection and export behavior.
 
 ## Verification
 
