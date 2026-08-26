@@ -89,4 +89,26 @@ final class EntryStoreTests: XCTestCase {
         XCTAssertEqual(store.todayEntry.body, entry.body)
         XCTAssertTrue(FileManager.default.fileExists(atPath: newDirectory.appendingPathComponent("\(entry.id).md").path))
     }
+
+    func testDuplicateEntryIDsDoNotCrashVisibleEntries() throws {
+        let directory = try temporaryDirectory()
+        let today = fixedDate("2026-05-02")
+        let first = DailyEntry(
+            id: "2026-05-02-080000",
+            date: today,
+            body: "first copy",
+            createdAt: Date(timeIntervalSince1970: 100)
+        )
+        let second = DailyEntry(
+            id: "2026-05-02-080000",
+            date: today,
+            body: "second copy",
+            createdAt: Date(timeIntervalSince1970: 200)
+        )
+        try MarkdownEntrySerializer.save(first, to: directory.appendingPathComponent("2026-05-02-080000.md"))
+        try MarkdownEntrySerializer.save(second, to: directory.appendingPathComponent("2026-05-02-080000-copy.md"))
+
+        let store = EntryStore(entriesDirectory: directory, today: today)
+        XCTAssertEqual(Set(store.visibleEntries.map(\.id)).count, store.visibleEntries.count)
+    }
 }
